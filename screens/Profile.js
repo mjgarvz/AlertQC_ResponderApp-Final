@@ -54,7 +54,6 @@ export default class ProfileScreen extends React.Component {
               <Text>{"Name:\n" + item.first_name + item.last_name}</Text>
               <Text>{"\nContact:\n" + item.contact}</Text>
               <Text>{"\nEmail:\n" + item.email}</Text>
-              
           </Text>
         </View>
       </TouchableOpacity>
@@ -75,6 +74,9 @@ export default class ProfileScreen extends React.Component {
             renderItem={this._renderItem}
             keyExtractor={(item, index) => index.toString()}
           ></FlatList>
+          <View>
+            <Text>Current Incident in Progress?</Text>
+          </View>
         </View>
       </SafeAreaView>
     );
