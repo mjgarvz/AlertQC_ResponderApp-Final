@@ -1,7 +1,8 @@
 import React from 'react';
-import { View, Text, Button, SafeAreaView, FlatList, StyleSheet, TouchableOpacity, Alert } from 'react-native';
+import { Linking, Dimensions, View, Text, Button, SafeAreaView, FlatList, StyleSheet, TouchableOpacity, Alert, TouchableWithoutFeedback} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { TextInput } from 'react-native';
+import { color } from 'react-native-elements/dist/helpers';
 
 export default class ProfileScreen extends React.Component {
 
@@ -14,10 +15,108 @@ export default class ProfileScreen extends React.Component {
       urName: '',
       urContact: '',
       urEmail: '',
+      status: 'Available',
+      dataSourceTwo: [],
     };
   }
 
-  _onRefresh() {
+  _renderToComplete = ({item, index}) => {
+    return (
+      <TouchableOpacity
+        onPress={() => {
+          Alert.alert(
+            "Incident Detail",
+            "Reporter: " +
+              item.first_name +" "+ item.last_name +
+              "\n" +
+              "Location: " +
+              item.location_of_incident +
+              "\n" +
+              "Incident: " +
+              item.incident_type +
+              "\n" +
+              "Injuries: " +
+              item.injuries +
+              "\n" +
+              "Date/Time Reported: " +
+              item.date_time +
+              "\n" +
+              "Short Brief:\n\n" +
+              item.short_description,
+            [
+              {
+                text: "Cancel",
+                style: "cancel",
+              },
+              {
+                text: "Call",
+                onPress: () =>{Linking.openURL("tel: " + item.phone);}
+              },
+              {
+                text: "Complete",
+                onPress: () => {
+                  console.log(Email)
+                  const repID = item.id + "";
+                  console.log(repID)
+                  fetch("https://alert-qc.com/mobile/updateToComplete.php", {
+                    method: "POST",
+                    headers: {
+                      Accept: "application/json",
+                      "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                      username: Email,
+                      report: repID,
+                    }),
+                  })
+                  .then((response) => response.json())
+                  .then((responseJson) => {
+                    // If the Data matched.
+                    if (responseJson === "Loading~") {
+                    } else {
+                    }
+                  })
+                  .catch((err) => {
+                    console.error(err);
+                  });
+                  this.componentDidMount();
+                  
+              },
+              },
+            ]
+          );
+        }}
+      >
+        <View style={styles.repCard}>
+          <Text style={styles.itemText}>
+            <Text style={styles.accHead}>Reporter:</Text>
+            <Text style={styles.itemVal} editable={false}>{"\n" + item.first_name +" "+ item.last_name+"\n"}</Text>
+
+            <Text style={styles.accHead}>Contact:</Text>
+            <Text style={styles.itemVal} editable={false}>{"\n" + item.phone +"\n"}</Text>
+
+            <Text style={styles.accHead}>Barangay:</Text>
+            <Text style={styles.itemVal} editable={false}>{item.barangay +"\n"}</Text>
+            
+            <Text style={styles.accHead}>Location:</Text>
+            <Text style={styles.itemVal} editable={false}>{item.location_of_incident +"\n"}</Text>
+
+            <Text style={styles.accHead}>Incident:</Text>
+            <Text style={styles.itemVal} editable={false}>{item.incident_type +"\n"}</Text>
+
+            <Text style={styles.accHead}>Injuries:</Text>
+            <Text style={styles.itemVal} editable={false}>{item.injuries +"\n"}</Text>
+            
+            
+          </Text>
+        </View>
+      </TouchableOpacity>
+    );
+  };
+
+
+  componentDidMount() {
+    //Get User Email From Local Storage
     AsyncStorage.getItem("userEmail").then((data) => {
       if (data) {
         //If userEmail has data -> email
@@ -43,15 +142,12 @@ export default class ProfileScreen extends React.Component {
         console.log("error")
       }
     });
-  }
-
-  componentDidMount() {
-    //Get User Email From Local Storage
+    
     AsyncStorage.getItem("userEmail").then((data) => {
       if (data) {
         //If userEmail has data -> email
         var Email = JSON.parse(data)
-        fetch("https://alert-qc.com/mobile/load_Respo_user.php", {
+        fetch("https://alert-qc.com/mobile/reportsToComplete.php", {
         method: "POST",
         headers: {
         Accept: "application/json",
@@ -65,7 +161,7 @@ export default class ProfileScreen extends React.Component {
         .then((reseponseJson) => {
           this.setState({
             isLoading: false.valueOf,
-            dataSource: reseponseJson,
+            dataSourceTwo: reseponseJson,
           });
         });  
       }else{
@@ -203,32 +299,48 @@ export default class ProfileScreen extends React.Component {
         </View>
     );
     } else {
-      
+      return(
+        <View>
+          <Text>FAIL LOAD</Text>
+        </View>
+      );
     }
     
     
   };
 
   render() {
-    let { dataSource, isLoading } = this.state;
+    let { dataSource,dataSourceTwo, isLoading } = this.state;
     if (isLoading) {
       <View></View>;
     }
     
     return (
       <SafeAreaView>
-        <View styles={styles.container}>
+        <View>
           <View>
             <FlatList
               data={dataSource}
               renderItem={this._renderItem}
               keyExtractor={(item, index) => index.toString()}
             ></FlatList>
-            
-
           </View>
           <View>
-            <Text  >Current Incident in Progress?</Text>
+            <View style={styles.statusCheck}> 
+              <TouchableWithoutFeedback>
+                <TextInput style={styles.textStatus} editable={false}>Assigned Reports:</TextInput>
+              </TouchableWithoutFeedback>
+            </View>
+            <View>
+              <FlatList
+              horizontal
+              pagingEnabled={true}
+              showsHorizontalScrollIndicator={false}
+                data={dataSourceTwo}
+                renderItem={this._renderToComplete}
+                keyExtractor={(item, index) => index.toString()}
+              ></FlatList>
+            </View>
           </View>
         </View>
       </SafeAreaView>
@@ -238,7 +350,6 @@ export default class ProfileScreen extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     justifyContent: "center",
     alignItems: "center",
     padding: 10,
@@ -246,8 +357,7 @@ const styles = StyleSheet.create({
   },
   itemCard: {
     padding: 25,
-    borderBottomWidth: 2,
-    borderBottomColor: "#ffcd9c",
+    width: Dimensions.get("screen").width,
   },
   itemText: {
     fontSize: 20,
@@ -263,6 +373,23 @@ const styles = StyleSheet.create({
   buttonDuty: {
     textAlign: 'center',
     justifyContent: 'center',
-    padding: 10
+
+  },
+  statusCheck: {
+    width: Dimensions.get("screen").width,
+    backgroundColor: '#660000',
+  },
+  textStatus: {
+    color: '#fff',
+    textAlign: 'center',
+    fontSize: 25,
+    paddingTop: 5,
+    paddingBottom: 5
+  },
+  repCard: {
+    padding: 25,
+    width: Dimensions.get("screen").width,
+    borderWidth: 2,
+    borderColor: 'grey'
   }
 });

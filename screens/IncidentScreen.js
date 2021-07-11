@@ -185,19 +185,19 @@ export default class IncidentScreen extends React.Component {
         <View style={styles.itemCard}>
           <Text style={styles.itemText}>
             <Text style={styles.accHead}>Reporter:</Text>
-            <TextInput style={styles.itemVal} editable={false}>{item.first_name +" "+ item.last_name+"\n"}</TextInput>
+            <Text style={styles.itemVal} editable={false}>{item.first_name +" "+ item.last_name+"\n"}</Text>
 
             <Text style={styles.accHead}>Barangay:</Text>
-            <TextInput style={styles.itemVal} editable={false}>{item.barangay+"\n"}</TextInput>
+            <Text style={styles.itemVal} editable={false}>{item.barangay+"\n"}</Text>
 
             <Text style={styles.accHead}>Location:</Text>
-            <TextInput style={styles.itemVal} editable={false}>{item.location_of_incident+"\n"}</TextInput>
+            <Text style={styles.itemVal} editable={false}>{item.location_of_incident+"\n"}</Text>
 
             <Text style={styles.accHead}>Incident:</Text>
-            <TextInput style={styles.itemVal} editable={false}>{item.incident_type+"\n"}</TextInput>
+            <Text style={styles.itemVal} editable={false}>{item.incident_type+"\n"}</Text>
 
             <Text style={styles.accHead}>Contact:</Text>
-            <TextInput style={styles.itemVal} editable={false}>{item.phone}</TextInput>
+            <Text style={styles.itemVal} editable={false}>{item.phone}</Text>
           </Text>
         </View>
       </TouchableOpacity>
