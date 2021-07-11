@@ -17,6 +17,34 @@ export default class ProfileScreen extends React.Component {
     };
   }
 
+  _onRefresh() {
+    AsyncStorage.getItem("userEmail").then((data) => {
+      if (data) {
+        //If userEmail has data -> email
+        var Email = JSON.parse(data)
+        fetch("https://alert-qc.com/mobile/load_Respo_user.php", {
+        method: "POST",
+        headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          respo_email: Email
+        }),
+        })
+        .then((response) => response.json())
+        .then((reseponseJson) => {
+          this.setState({
+            isLoading: false.valueOf,
+            dataSource: reseponseJson,
+          });
+        });  
+      }else{
+        console.log("error")
+      }
+    });
+  }
+
   componentDidMount() {
     //Get User Email From Local Storage
     AsyncStorage.getItem("userEmail").then((data) => {
@@ -77,6 +105,35 @@ export default class ProfileScreen extends React.Component {
               },
               {
                 text: 'Go Off Duty',
+                onPress: () => {
+                  console.log(Email)
+                  const itemID = item.id + "";
+                  console.log(itemID)
+                  console.log(curStat)
+                  fetch("https://alert-qc.com/mobile/RespoOnDuty.php", {
+                    method: "POST",
+                    headers: {
+                      Accept: "application/json",
+                      "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                      respoID: itemID,
+                      respoStatus : curStat,
+
+                    }),
+                  })
+                  .then((response) => response.json())
+                  .then((responseJson) => {
+                    // If the Data matched.
+                    if (responseJson === "Loading~") {
+                    } else {
+                    }
+                  })
+                  .catch((err) => {
+                    console.error(err);
+                  });
+                  this.componentDidMount();
+                }
                 
               },
             ])}/>
@@ -109,7 +166,35 @@ export default class ProfileScreen extends React.Component {
               },
               {
                 text: 'Go On Duty',
-                
+                onPress: () => {
+                  console.log(Email)
+                  const itemID = item.id + "";
+                  console.log(itemID)
+                  console.log(curStat)
+                  fetch("https://alert-qc.com/mobile/RespoOnDuty.php", {
+                    method: "POST",
+                    headers: {
+                      Accept: "application/json",
+                      "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                      respoID: itemID,
+                      respoStatus : curStat,
+
+                    }),
+                  })
+                  .then((response) => response.json())
+                  .then((responseJson) => {
+                    // If the Data matched.
+                    if (responseJson === "Loading~") {
+                    } else {
+                    }
+                  })
+                  .catch((err) => {
+                    console.error(err);
+                  });
+                  this.componentDidMount();
+                }
               },
             ])}/>
           </Text>
@@ -141,7 +226,7 @@ export default class ProfileScreen extends React.Component {
 
           </View>
           <View>
-            <Text>Current Incident in Progress?</Text>
+            <Text  >Current Incident in Progress?</Text>
           </View>
         </View>
       </SafeAreaView>
