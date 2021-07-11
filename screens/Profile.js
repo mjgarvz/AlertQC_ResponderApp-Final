@@ -11,6 +11,9 @@ export default class ProfileScreen extends React.Component {
     this.state = {
       isLoading: true,
       dataSource: [],
+      urName: '',
+      urContact: '',
+      urEmail: '',
     };
   }
 
@@ -43,20 +46,23 @@ export default class ProfileScreen extends React.Component {
     });
   }
   _renderItem = ({ item, index }) => {
+    const name= item.first_name +" "+ item.last_name
+    const cont= item.contact
+    const email= item.email
+    
     return (
-      <TouchableOpacity
-        onPress={() => {
-        }}
-      >
         <View style={styles.itemCard}>
           <Text style={styles.itemText}>
-              <Text>Responder</Text>
-              <Text>{"Name:\n" + item.first_name + item.last_name}</Text>
-              <Text>{"\nContact:\n" + item.contact}</Text>
-              <Text>{"\nEmail:\n" + item.email}</Text>
+            <Text style={styles.accHead}>Name:</Text>
+            <TextInput editable={false}>{"\n"+name+"\n"}</TextInput>
+
+            <Text style={styles.accHead}>Contact:</Text>
+            <TextInput editable={false}>{"\n"+cont+"\n"}</TextInput>
+
+            <Text style={styles.accHead}>Email:</Text>
+            <TextInput editable={false}>{"\n"+email}</TextInput>
           </Text>
         </View>
-      </TouchableOpacity>
     );
   };
 
@@ -69,11 +75,13 @@ export default class ProfileScreen extends React.Component {
     return (
       <SafeAreaView>
         <View styles={styles.container}>
-          <FlatList
-            data={dataSource}
-            renderItem={this._renderItem}
-            keyExtractor={(item, index) => index.toString()}
-          ></FlatList>
+          <View>
+            <FlatList
+              data={dataSource}
+              renderItem={this._renderItem}
+              keyExtractor={(item, index) => index.toString()}
+            ></FlatList>
+          </View>
           <View>
             <Text>Current Incident in Progress?</Text>
           </View>
@@ -103,13 +111,8 @@ const styles = StyleSheet.create({
   LogButt: {
     position: "absolute",
   },
-  NameHead: {
-
-  },
-  Contacthead: {
-
-  },
-  EmailHead: {
-    
+  accHead: {
+    fontSize: 15,
+    color: "grey",
   },
 });
