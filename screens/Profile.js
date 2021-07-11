@@ -18,10 +18,15 @@ export default class ProfileScreen extends React.Component {
       status: 'Available',
       dataSourceTwo: [],
     };
+    setInterval(() => {
+      this.componentDidMount();
+    }, 1000);
+
   }
 
   _renderToComplete = ({item, index}) => {
     return (
+      
       <TouchableOpacity
         onPress={() => {
           Alert.alert(
@@ -55,7 +60,6 @@ export default class ProfileScreen extends React.Component {
               {
                 text: "Complete",
                 onPress: () => {
-                  console.log(Email)
                   const repID = item.id + "";
                   console.log(repID)
                   fetch("https://alert-qc.com/mobile/updateToComplete.php", {
@@ -65,7 +69,6 @@ export default class ProfileScreen extends React.Component {
                       "Content-Type": "application/json",
                     },
                     body: JSON.stringify({
-                      username: Email,
                       report: repID,
                     }),
                   })
@@ -80,8 +83,7 @@ export default class ProfileScreen extends React.Component {
                     console.error(err);
                   });
                   this.componentDidMount();
-                  
-              },
+                },
               },
             ]
           );
@@ -202,7 +204,6 @@ export default class ProfileScreen extends React.Component {
                 {
                   text: 'Go Off Duty',
                   onPress: () => {
-                    console.log(Email)
                     const itemID = item.id + "";
                     console.log(itemID)
                     console.log(curStat)
@@ -264,7 +265,6 @@ export default class ProfileScreen extends React.Component {
                 {
                   text: 'Go On Duty',
                   onPress: () => {
-                    console.log(Email)
                     const itemID = item.id + "";
                     console.log(itemID)
                     console.log(curStat)
@@ -362,6 +362,7 @@ const styles = StyleSheet.create({
   itemText: {
     fontSize: 20,
     color: "black",
+    
   },
   LogButt: {
     position: "absolute",
@@ -389,7 +390,5 @@ const styles = StyleSheet.create({
   repCard: {
     padding: 25,
     width: Dimensions.get("screen").width,
-    borderWidth: 2,
-    borderColor: 'grey'
   }
 });
