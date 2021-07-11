@@ -117,6 +117,30 @@ export default class IncidentScreen extends React.Component {
                 text: "Respond",
                 onPress: () => {
                   console.log(Email)
+                  const repID = item.id + "";
+                  console.log(repID)
+                  fetch("https://alert-qc.com/mobile/updateStatusAssign.php", {
+                    method: "POST",
+                    headers: {
+                      Accept: "application/json",
+                      "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                      username: Email,
+                      report: repID,
+                    }),
+                  })
+                  .then((response) => response.json())
+                  .then((responseJson) => {
+                    // If the Data matched.
+                    if (responseJson === "Loading~") {
+                    } else {
+                    }
+                  })
+                  .catch((err) => {
+                    console.error(err);
+                  });
+                  
                   Alert.alert("Assignment Update","This incident is now assigned to you",
                   [
                     {
