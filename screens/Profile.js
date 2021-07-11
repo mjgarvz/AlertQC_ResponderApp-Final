@@ -46,11 +46,14 @@ export default class ProfileScreen extends React.Component {
     });
   }
   _renderItem = ({ item, index }) => {
-    const name= item.first_name +" "+ item.last_name
-    const cont= item.contact
-    const email= item.email
-    
-    return (
+    const name = item.first_name +" "+ item.last_name
+    const cont = item.contact
+    const email = item.email
+    const status = item.on_duty
+    var curStat = ""
+    if (status === 'True'){
+      curStat = "On Duty"
+      return (
         <View style={styles.itemCard}>
           <Text style={styles.itemText}>
             <Text style={styles.accHead}>Name:</Text>
@@ -60,10 +63,63 @@ export default class ProfileScreen extends React.Component {
             <TextInput editable={false}>{"\n"+cont+"\n"}</TextInput>
 
             <Text style={styles.accHead}>Email:</Text>
-            <TextInput editable={false}>{"\n"+email}</TextInput>
+            <TextInput editable={false}>{"\n"+email+"\n"}</TextInput>
+
+            <Text style={styles.accHead}>Status:{"\n"}</Text>
+
+            <Button 
+            color='#87c830'
+            title={curStat}
+            onPress={() => Alert.alert("Update Status","testing",[
+              {
+                text: 'Cancel',
+                style:"cancel"
+              },
+              {
+                text: 'Go Off Duty',
+                
+              },
+            ])}/>
           </Text>
         </View>
     );
+    }else if (status === 'false') {
+      curStat = "Off Duty"
+      return (
+        <View style={styles.itemCard}>
+          <Text style={styles.itemText}>
+            <Text style={styles.accHead}>Name:</Text>
+            <TextInput editable={false}>{"\n"+name+"\n"}</TextInput>
+
+            <Text style={styles.accHead}>Contact:</Text>
+            <TextInput editable={false}>{"\n"+cont+"\n"}</TextInput>
+
+            <Text style={styles.accHead}>Email:</Text>
+            <TextInput editable={false}>{"\n"+email+"\n"}</TextInput>
+
+            <Text style={styles.accHead}>Status:{"\n"}</Text>
+
+            <Button 
+            color='#660000'
+            title={curStat}
+            onPress={() => Alert.alert("Update Status","testing",[
+              {
+                text: 'Cancel',
+                style:"cancel"
+              },
+              {
+                text: 'Go On Duty',
+                
+              },
+            ])}/>
+          </Text>
+        </View>
+    );
+    } else {
+      
+    }
+    
+    
   };
 
   render() {
@@ -81,6 +137,8 @@ export default class ProfileScreen extends React.Component {
               renderItem={this._renderItem}
               keyExtractor={(item, index) => index.toString()}
             ></FlatList>
+            
+
           </View>
           <View>
             <Text>Current Incident in Progress?</Text>
