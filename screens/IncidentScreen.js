@@ -1,4 +1,3 @@
-import { isLoading } from "expo-font";
 import React from "react";
 import {
   StyleSheet,
@@ -7,7 +6,7 @@ import {
   View,
   Text,
   Linking,
-  Image,
+  TextInput,
   TouchableOpacity,
   Clipboard,
   ToastAndroid,
@@ -15,11 +14,7 @@ import {
   Alert,
 } from "react-native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import CallButton from "./../components/ButtonBasic";
-import { Ionicons } from "@expo/vector-icons";
 import { OpenMapDirections } from 'react-native-navigation-directions';
-import openMap,{ createOpenLink, createMapLink} from 'react-native-open-maps';
-import OpenMap from "react-native-open-map";
 import { showLocation } from 'react-native-map-link'
 
 export default class IncidentScreen extends React.Component {
@@ -122,7 +117,7 @@ export default class IncidentScreen extends React.Component {
                 text: "Respond",
                 onPress: () => {
                   console.log(Email)
-                  Alert.alert("PASTE TO DESTINATION","Coordiniates will be copied into clipboard, please paste into destination",
+                  Alert.alert("Assignment Update","This incident is now assigned to you",
                   [
                     {
                       text: 'Cancel',
@@ -141,7 +136,7 @@ export default class IncidentScreen extends React.Component {
                           AlertIOS.alert("Location Copied to Clipboard");
       
                         }
-                        const desti = item.location_of_incident + ", Quezon City, Metro Manila"
+                        const desti = item.location_of_incident +", " + item.barangay+ ", Quezon City, Metro Manila"
                         const end = desti.toString()
                         const start = "My Location"
                         const travelType = 'drive';
@@ -165,22 +160,20 @@ export default class IncidentScreen extends React.Component {
       >
         <View style={styles.itemCard}>
           <Text style={styles.itemText}>
-            {"Reporter: " +
-              item.first_name +" "+ item.last_name +
-              "\n" +
-              "Barangay: " +
-              item.barangay +
-              "\n" +
-              "Location: " +
-              item.location_of_incident +
-              "\n" +
-              "Incident: " +
-              item.incident_type +
-              "\n"+
-              "Contact Number: " +
-              item.phone+
-              "\n"+
-              item.status}
+            <Text style={styles.accHead}>Reporter:</Text>
+            <TextInput style={styles.itemVal} editable={false}>{item.first_name +" "+ item.last_name+"\n"}</TextInput>
+
+            <Text style={styles.accHead}>Barangay:</Text>
+            <TextInput style={styles.itemVal} editable={false}>{item.barangay+"\n"}</TextInput>
+
+            <Text style={styles.accHead}>Location:</Text>
+            <TextInput style={styles.itemVal} editable={false}>{item.location_of_incident+"\n"}</TextInput>
+
+            <Text style={styles.accHead}>Incident:</Text>
+            <TextInput style={styles.itemVal} editable={false}>{item.incident_type+"\n"}</TextInput>
+
+            <Text style={styles.accHead}>Contact:</Text>
+            <TextInput style={styles.itemVal} editable={false}>{item.phone}</TextInput>
           </Text>
         </View>
       </TouchableOpacity>
@@ -216,15 +209,24 @@ const styles = StyleSheet.create({
     paddingTop: 50,
   },
   itemCard: {
+    flex: 1,
     padding: 25,
     borderBottomWidth: 2,
     borderBottomColor: "#ffcd9c",
   },
   itemText: {
+    flex: 1,
     fontSize: 20,
     color: "black",
   },
   LogButt: {
     position: "absolute",
+  },
+  accHead: {
+    fontSize: 15,
+    color: "grey",
+  },
+  itemVal: {
+
   },
 });
