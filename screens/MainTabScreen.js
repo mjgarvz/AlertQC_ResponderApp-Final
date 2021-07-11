@@ -123,7 +123,7 @@ const ProfileStackScreen = ({ navigation }) => (
       name="Map"
       component={ProfileScreen}
       options={{
-        title: "Profile",
+        title: "Profile Screen",
         headerTitleAlign: "center",
         headerLeft: () => (
           <CallButton

@@ -94,49 +94,50 @@ export default class ProfileScreen extends React.Component {
             <TextInput editable={false}>{"\n"+email+"\n"}</TextInput>
 
             <Text style={styles.accHead}>Status:{"\n"}</Text>
+            <TouchableOpacity style={styles.buttonDuty}>
+              <Button 
+              color='#87c830'
+              title={curStat}
+              onPress={() => Alert.alert("Update Status","testing",[
+                {
+                  text: 'Cancel',
+                  style:"cancel"
+                },
+                {
+                  text: 'Go Off Duty',
+                  onPress: () => {
+                    console.log(Email)
+                    const itemID = item.id + "";
+                    console.log(itemID)
+                    console.log(curStat)
+                    fetch("https://alert-qc.com/mobile/RespoOnDuty.php", {
+                      method: "POST",
+                      headers: {
+                        Accept: "application/json",
+                        "Content-Type": "application/json",
+                      },
+                      body: JSON.stringify({
+                        respoID: itemID,
+                        respoStatus : curStat,
 
-            <Button 
-            color='#87c830'
-            title={curStat}
-            onPress={() => Alert.alert("Update Status","testing",[
-              {
-                text: 'Cancel',
-                style:"cancel"
-              },
-              {
-                text: 'Go Off Duty',
-                onPress: () => {
-                  console.log(Email)
-                  const itemID = item.id + "";
-                  console.log(itemID)
-                  console.log(curStat)
-                  fetch("https://alert-qc.com/mobile/RespoOnDuty.php", {
-                    method: "POST",
-                    headers: {
-                      Accept: "application/json",
-                      "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                      respoID: itemID,
-                      respoStatus : curStat,
-
-                    }),
-                  })
-                  .then((response) => response.json())
-                  .then((responseJson) => {
-                    // If the Data matched.
-                    if (responseJson === "Loading~") {
-                    } else {
-                    }
-                  })
-                  .catch((err) => {
-                    console.error(err);
-                  });
-                  this.componentDidMount();
-                }
-                
-              },
-            ])}/>
+                      }),
+                    })
+                    .then((response) => response.json())
+                    .then((responseJson) => {
+                      // If the Data matched.
+                      if (responseJson === "Loading~") {
+                      } else {
+                      }
+                    })
+                    .catch((err) => {
+                      console.error(err);
+                    });
+                    this.componentDidMount();
+                  }
+                  
+                },
+              ])}/>
+            </TouchableOpacity>
           </Text>
         </View>
     );
@@ -155,48 +156,49 @@ export default class ProfileScreen extends React.Component {
             <TextInput editable={false}>{"\n"+email+"\n"}</TextInput>
 
             <Text style={styles.accHead}>Status:{"\n"}</Text>
+            <TouchableOpacity style={styles.buttonDuty}>
+              <Button 
+              color='#660000'
+              title={curStat}
+              onPress={() => Alert.alert("Update Status","testing",[
+                {
+                  text: 'Cancel',
+                  style:"cancel"
+                },
+                {
+                  text: 'Go On Duty',
+                  onPress: () => {
+                    console.log(Email)
+                    const itemID = item.id + "";
+                    console.log(itemID)
+                    console.log(curStat)
+                    fetch("https://alert-qc.com/mobile/RespoOnDuty.php", {
+                      method: "POST",
+                      headers: {
+                        Accept: "application/json",
+                        "Content-Type": "application/json",
+                      },
+                      body: JSON.stringify({
+                        respoID: itemID,
+                        respoStatus : curStat,
 
-            <Button 
-            color='#660000'
-            title={curStat}
-            onPress={() => Alert.alert("Update Status","testing",[
-              {
-                text: 'Cancel',
-                style:"cancel"
-              },
-              {
-                text: 'Go On Duty',
-                onPress: () => {
-                  console.log(Email)
-                  const itemID = item.id + "";
-                  console.log(itemID)
-                  console.log(curStat)
-                  fetch("https://alert-qc.com/mobile/RespoOnDuty.php", {
-                    method: "POST",
-                    headers: {
-                      Accept: "application/json",
-                      "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                      respoID: itemID,
-                      respoStatus : curStat,
-
-                    }),
-                  })
-                  .then((response) => response.json())
-                  .then((responseJson) => {
-                    // If the Data matched.
-                    if (responseJson === "Loading~") {
-                    } else {
-                    }
-                  })
-                  .catch((err) => {
-                    console.error(err);
-                  });
-                  this.componentDidMount();
-                }
-              },
-            ])}/>
+                      }),
+                    })
+                    .then((response) => response.json())
+                    .then((responseJson) => {
+                      // If the Data matched.
+                      if (responseJson === "Loading~") {
+                      } else {
+                      }
+                    })
+                    .catch((err) => {
+                      console.error(err);
+                    });
+                    this.componentDidMount();
+                  }
+                },
+              ])}/>
+            </TouchableOpacity>
           </Text>
         </View>
     );
@@ -258,4 +260,9 @@ const styles = StyleSheet.create({
     fontSize: 15,
     color: "grey",
   },
+  buttonDuty: {
+    textAlign: 'center',
+    justifyContent: 'center',
+    padding: 10
+  }
 });
