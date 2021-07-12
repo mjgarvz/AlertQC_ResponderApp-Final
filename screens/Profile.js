@@ -213,6 +213,8 @@ export default class ProfileScreen extends React.Component {
     const name = item.first_name + " " + item.last_name;
     const cont = item.contact;
     const email = item.email;
+
+    //update onDutyStatus
     const isDuty = item.on_duty;
     var curDuty = "";
     var butColOne = "";
