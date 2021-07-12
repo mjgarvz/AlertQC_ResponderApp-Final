@@ -201,6 +201,9 @@ export default class IncidentScreen extends React.Component {
             <Text style={styles.accHead}>Incident:</Text>
             <Text style={styles.itemVal} editable={false}>{item.incident_type+"\n"}</Text>
 
+            {/* <Text >SATUS:</Text>
+            <Text style={styles.itemVal} editable={false}>{item.status+"\n"}</Text> */}
+
             <Text style={styles.accHead}>Contact:</Text>
             <Text style={styles.itemVal} editable={false}>{item.phone}</Text>
           </Text>

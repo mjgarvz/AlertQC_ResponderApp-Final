@@ -238,7 +238,7 @@ export default class ProfileScreen extends React.Component {
     });
   }
   _renderItem = ({ item, index }) => {
-    const name = item.first_name + " " + item.last_name;
+    const name = item.first_name + " " + item.middle_name + " " + item.last_name;
     const cont = item.contact;
     const email = item.email;
     //user id
