@@ -9,7 +9,6 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { SimpleLineIcons } from "@expo/vector-icons";
 import CallButton from "../components/ButtonBasic";
 
-import HomeScreen from "./HomeScreen";
 import ChatScreen from "./ChatScreen";
 import IncidentScreen from "./IncidentScreen";
 import ProfileScreen from "./Profile";
@@ -20,7 +19,6 @@ import { TouchableOpacity } from "react-native";
 import { Alert } from "react-native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const HomeStack = createStackNavigator();
 const IncidentStack = createStackNavigator();
 const ProfileStack = createStackNavigator();
 const ChatStack = createStackNavigator();

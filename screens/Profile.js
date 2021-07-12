@@ -2,7 +2,6 @@ import React from 'react';
 import { Linking, Dimensions, View, Text, Button, SafeAreaView, FlatList, StyleSheet, TouchableOpacity, Alert, TouchableWithoutFeedback} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { TextInput } from 'react-native';
-import { color } from 'react-native-elements/dist/helpers';
 
 export default class ProfileScreen extends React.Component {
 
@@ -12,21 +11,39 @@ export default class ProfileScreen extends React.Component {
     this.state = {
       isLoading: true,
       dataSource: [],
-      urName: '',
-      urContact: '',
-      urEmail: '',
-      status: 'Available',
       dataSourceTwo: [],
+      status: "",
     };
-    setInterval(() => {
-      this.componentDidMount();
-    }, 1000);
-
+    // setInterval(() => {
+    //   this.componentDidMount();
+    // }, 1000);
   }
 
-  _renderToComplete = ({item, index}) => {
+  _emptyList = () => {
     return (
-      
+      <View>
+          <Text>No Reports For Now</Text>
+      </View>
+    )
+  }
+
+
+
+  _renderToComplete = ({item, index}) => {
+    if (item.id === undefined){
+      this.state.status = "Available"
+      console.log(this.state.status)
+      return (
+        <View>
+          <Text>
+            
+          </Text>
+        </View>
+      );
+    }else {
+      this.state.status = "On Call"
+      console.log(this.state.status)
+    return (
       <TouchableOpacity
         onPress={() => {
           Alert.alert(
@@ -113,7 +130,7 @@ export default class ProfileScreen extends React.Component {
           </Text>
         </View>
       </TouchableOpacity>
-    );
+    )}
   };
 
 
@@ -176,8 +193,17 @@ export default class ProfileScreen extends React.Component {
     const cont = item.contact
     const email = item.email
     const isDuty = item.on_duty
+    var curDuty = ""
+    var butColOne = ""
+    if (isDuty === 'True') {
+      curDuty = "On Duty"
+      butColOne = "#87c830"
+    }else if (isDuty === 'false'){
+      curDuty = "Off Duty"
+      butColOne = "#660000"
+    }
     //manual oncallORactivestatus
-    const isActive = item.status + ""
+    const isActive = this.state.status
     var isAct = "";
     var butCol = "";
     if (isActive === 'Available') {
@@ -189,9 +215,8 @@ export default class ProfileScreen extends React.Component {
     }
 
 
-    var curDuty = ""
-    if (isDuty === 'True'){
-      curDuty = "On Duty"
+    
+    if (name !== null){
       return (
         <View style={styles.itemCard}>
           <Text style={styles.itemText}>
@@ -207,7 +232,7 @@ export default class ProfileScreen extends React.Component {
             <Text style={styles.accHead}>Status:{"\n"}</Text>
             <TouchableOpacity style={styles.buttonDuty}>
               <Button 
-              color='#87c830'
+              color={butColOne}
               title={curDuty}
               onPress={() => Alert.alert("Update Duty Status","testing",[
                 {
@@ -215,7 +240,7 @@ export default class ProfileScreen extends React.Component {
                   style:"cancel"
                 },
                 {
-                  text: 'Go Off Duty',
+                  text: 'Update',
                   onPress: () => {
                     const itemID = item.id + "";
                     console.log(itemID)
@@ -291,109 +316,6 @@ export default class ProfileScreen extends React.Component {
                 },
               ])}/>
             </TouchableOpacity>
-          </Text>
-        </View>
-    );
-    }else if (isDuty === 'false') {
-      curDuty = "Off Duty"
-      return (
-        <View style={styles.itemCard}>
-          <Text style={styles.itemText}>
-            <Text style={styles.accHead}>Name:</Text>
-            <TextInput editable={false}>{"\n"+name+"\n"}</TextInput>
-
-            <Text style={styles.accHead}>Contact:</Text>
-            <TextInput editable={false}>{"\n"+cont+"\n"}</TextInput>
-
-            <Text style={styles.accHead}>Email:</Text>
-            <TextInput editable={false}>{"\n"+email+"\n"}</TextInput>
-
-            <Text style={styles.accHead}>Status:{"\n"}</Text>
-            <TouchableOpacity style={styles.buttonDuty}>
-              <Button 
-              color='#660000'
-              title={curDuty}
-              onPress={() => Alert.alert("Update Duty Status","testing",[
-                {
-                  text: 'Cancel',
-                  style:"cancel"
-                },
-                {
-                  text: 'Go On Duty',
-                  onPress: () => {
-                    const itemID = item.id + "";
-                    console.log(itemID)
-                    console.log(curDuty)
-                    fetch("https://alert-qc.com/mobile/RespoOnDuty.php", {
-                      method: "POST",
-                      headers: {
-                        Accept: "application/json",
-                        "Content-Type": "application/json",
-                      },
-                      body: JSON.stringify({
-                        respoID: itemID,
-                        respoStatus : curDuty,
-
-                      }),
-                    })
-                    .then((response) => response.json())
-                    .then((responseJson) => {
-                      // If the Data matched.
-                      if (responseJson === "Loading~") {
-                      } else {
-                      }
-                    })
-                    .catch((err) => {
-                      console.error(err);
-                    });
-                    this.componentDidMount();
-                  }
-                },
-              ])}/>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.buttonStatus}>
-              <Button 
-              color={butCol}
-              title={isAct}
-              onPress={() => Alert.alert("Update Current Status","testing",[
-                {
-                  text: 'Cancel',
-                  style:"cancel"
-                },
-                {
-                  text: 'Update',
-                  onPress: () => {
-                    const itemID = item.id + "";
-                    console.log(itemID)
-                    console.log(isAct)
-                    fetch("https://alert-qc.com/mobile/respoOnActive.php", {
-                      method: "POST",
-                      headers: {
-                        Accept: "application/json",
-                        "Content-Type": "application/json",
-                      },
-                      body: JSON.stringify({
-                        respoID: itemID,
-                        respoStatus : isAct,
-
-                      }),
-                    })
-                    .then((response) => response.json())
-                    .then((responseJson) => {
-                      // If the Data matched.
-                      if (responseJson === "Loading~") {
-                      } else {
-                      }
-                    })
-                    .catch((err) => {
-                      console.error(err);
-                    });
-                    this.componentDidMount();
-                  }
-                  
-                },
-              ])}/>
-            </TouchableOpacity>  
           </Text>
         </View>
     );
@@ -404,10 +326,6 @@ export default class ProfileScreen extends React.Component {
         </View>
       );
     }
-
-    
-    
-    
   };
 
   render() {
@@ -440,6 +358,8 @@ export default class ProfileScreen extends React.Component {
                 data={dataSourceTwo}
                 renderItem={this._renderToComplete}
                 keyExtractor={(item, index) => index.toString()}
+                ListEmptyComponent={this._emptyList()}
+                extraData={this.state}
               ></FlatList>
             </View>
           </View>
@@ -476,7 +396,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     justifyContent: 'center',
     width: Dimensions.get("screen").width * 0.436,
-
+    paddingRight: 10,
   },
   buttonStatus: {
     textAlign: 'center',
