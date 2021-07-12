@@ -80,6 +80,13 @@ export default class IncidentScreen extends React.Component {
   //INCIDENT CARD
 
   _renderItem = ({ item, index }) => {
+    if (item.id === undefined){
+      return(
+        <View>
+          <Text>No Available Reports For Now</Text>
+        </View>
+      )
+    }else {
     return (
       <TouchableOpacity
         onPress={() => {
@@ -200,6 +207,7 @@ export default class IncidentScreen extends React.Component {
         </View>
       </TouchableOpacity>
     );
+    }
   };
 
   render() {

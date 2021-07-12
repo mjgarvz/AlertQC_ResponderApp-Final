@@ -14,6 +14,7 @@ import {
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { TextInput } from "react-native";
+import { showLocation } from 'react-native-map-link'
 
 export default class ProfileScreen extends React.Component {
   constructor(props) {
@@ -23,11 +24,12 @@ export default class ProfileScreen extends React.Component {
       isLoading: true,
       dataSource: [],
       dataSourceTwo: [],
+      Email: "",
       status: "",
     };
-    // setInterval(() => {
-    //   this.componentDidMount();
-    // }, 1000);
+    setInterval(() => {
+      this.componentDidMount();
+    }, 1000);
   }
 
   _emptyList = () => {
@@ -41,7 +43,6 @@ export default class ProfileScreen extends React.Component {
   _renderToComplete = ({ item, index }) => {
     if (item.id === undefined) {
       this.state.status = "Available";
-      console.log(this.state.status);
       return (
         <View>
           <Text></Text>
@@ -49,7 +50,6 @@ export default class ProfileScreen extends React.Component {
       );
     } else {
       this.state.status = "On Call";
-      console.log(this.state.status);
       return (
         <TouchableOpacity
           onPress={() => {
@@ -89,7 +89,6 @@ export default class ProfileScreen extends React.Component {
                   text: "Complete",
                   onPress: () => {
                     const repID = item.id + "";
-                    console.log(repID);
                     fetch("https://alert-qc.com/mobile/updateToComplete.php", {
                       method: "POST",
                       headers: {
@@ -110,6 +109,8 @@ export default class ProfileScreen extends React.Component {
                       .catch((err) => {
                         console.error(err);
                       });
+
+                      
                     this.componentDidMount();
                   },
                 },
@@ -148,6 +149,32 @@ export default class ProfileScreen extends React.Component {
               <Text style={styles.itemVal} editable={false}>
                 {item.injuries + "\n"}
               </Text>
+              <TouchableOpacity style={styles.buttonDuty}>
+              <Button 
+              color="#FF8000"
+              title="Call"
+              onPress={() => {
+                Linking.openURL("tel: " + item.phone);
+              }}
+              ></Button>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.buttonDuty}>
+              <Button 
+              color="#FF8000"
+              title="Navigate"
+              onPress={() => {
+                const desti = item.location_of_incident +", " + item.barangay+ ", Quezon City, Metro Manila"
+                        const end = desti.toString()
+                        console.log(end)
+
+                        showLocation({
+                          longitude: 0,
+                          latitude: 0,
+                          title: end
+                        })
+              }}
+              ></Button>
+            </TouchableOpacity>
             </Text>
           </View>
         </TouchableOpacity>
@@ -160,7 +187,8 @@ export default class ProfileScreen extends React.Component {
     AsyncStorage.getItem("userEmail").then((data) => {
       if (data) {
         //If userEmail has data -> email
-        var Email = JSON.parse(data);
+        var uEmail = JSON.parse(data);
+        this.state.Email = uEmail
         fetch("https://alert-qc.com/mobile/load_Respo_user.php", {
           method: "POST",
           headers: {
@@ -168,7 +196,7 @@ export default class ProfileScreen extends React.Component {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            respo_email: Email,
+            respo_email: uEmail,
           }),
         })
           .then((response) => response.json())
@@ -186,7 +214,7 @@ export default class ProfileScreen extends React.Component {
     AsyncStorage.getItem("userEmail").then((data) => {
       if (data) {
         //If userEmail has data -> email
-        var Email = JSON.parse(data);
+        var uEmail = JSON.parse(data);
         fetch("https://alert-qc.com/mobile/reportsToComplete.php", {
           method: "POST",
           headers: {
@@ -194,7 +222,7 @@ export default class ProfileScreen extends React.Component {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            respo_email: Email,
+            respo_email: uEmail,
           }),
         })
           .then((response) => response.json())
@@ -213,6 +241,8 @@ export default class ProfileScreen extends React.Component {
     const name = item.first_name + " " + item.last_name;
     const cont = item.contact;
     const email = item.email;
+    //user id
+    const ID = item.id + ""
 
     //update onDutyStatus
     const isDuty = item.on_duty;
@@ -232,10 +262,56 @@ export default class ProfileScreen extends React.Component {
     if (isActive === "Available") {
       isAct = "Available";
       butCol = "#87c830";
+      var responderID = ID
+      fetch("https://alert-qc.com/mobile/respoOnActive.php", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          respoID: responderID,
+          respoStatus: isAct,
+        }),
+      })
+        .then((response) => response.json())
+        .then((responseJson) => {
+          // If the Data matched.
+          if (responseJson === "Loading~") {
+          } else {
+          }
+        })
+        .catch((err) => {
+          console.error(err);
+        });
     } else if (isActive === "On Call") {
       isAct = "On Call";
       butCol = "#660000";
+      var responderID = ID
+      fetch("https://alert-qc.com/mobile/respoOnActive.php", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          respoID: responderID,
+          respoStatus: isAct,
+        }),
+      })
+        .then((response) => response.json())
+        .then((responseJson) => {
+          // If the Data matched.
+          if (responseJson === "Loading~") {
+          } else {
+          }
+        })
+        .catch((err) => {
+          console.error(err);
+        });
     }
+
+
 
     if (name !== null) {
       return (
@@ -265,8 +341,6 @@ export default class ProfileScreen extends React.Component {
                       text: "Update",
                       onPress: () => {
                         const itemID = item.id + "";
-                        console.log(itemID);
-                        console.log(curDuty);
                         fetch("https://alert-qc.com/mobile/RespoOnDuty.php", {
                           method: "POST",
                           headers: {
@@ -308,30 +382,7 @@ export default class ProfileScreen extends React.Component {
                     {
                       text: "Update",
                       onPress: () => {
-                        const itemID = item.id + "";
-                        console.log(itemID);
-                        console.log(isAct);
-                        fetch("https://alert-qc.com/mobile/respoOnActive.php", {
-                          method: "POST",
-                          headers: {
-                            Accept: "application/json",
-                            "Content-Type": "application/json",
-                          },
-                          body: JSON.stringify({
-                            respoID: itemID,
-                            respoStatus: isAct,
-                          }),
-                        })
-                          .then((response) => response.json())
-                          .then((responseJson) => {
-                            // If the Data matched.
-                            if (responseJson === "Loading~") {
-                            } else {
-                            }
-                          })
-                          .catch((err) => {
-                            console.error(err);
-                          });
+                        
                         this.componentDidMount();
                       },
                     },
@@ -427,6 +478,18 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     width: Dimensions.get("screen").width * 0.436,
   },
+  buttonMap: {
+    textAlign: "center",
+    justifyContent: "center",
+    width: Dimensions.get("screen").width * 0.436,
+    paddingRight: 10,
+  },
+  buttonCall: {
+    textAlign: "center",
+    justifyContent: "center",
+    width: Dimensions.get("screen").width * 0.436,
+  },
+
   statusCheck: {
     width: Dimensions.get("screen").width,
     backgroundColor: "#660000",
