@@ -175,10 +175,23 @@ export default class ProfileScreen extends React.Component {
     const name = item.first_name +" "+ item.last_name
     const cont = item.contact
     const email = item.email
-    const status = item.on_duty
-    var curStat = ""
-    if (status === 'True'){
-      curStat = "On Duty"
+    const isDuty = item.on_duty
+    //manual oncallORactivestatus
+    const isActive = item.status + ""
+    var isAct = "";
+    var butCol = "";
+    if (isActive === 'Available') {
+      isAct = "Available"
+      butCol = "#87c830"
+    }else if (isActive === 'On Call') {
+      isAct = "On Call"
+      butCol = "#660000"
+    }
+
+
+    var curDuty = ""
+    if (isDuty === 'True'){
+      curDuty = "On Duty"
       return (
         <View style={styles.itemCard}>
           <Text style={styles.itemText}>
@@ -195,8 +208,8 @@ export default class ProfileScreen extends React.Component {
             <TouchableOpacity style={styles.buttonDuty}>
               <Button 
               color='#87c830'
-              title={curStat}
-              onPress={() => Alert.alert("Update Status","testing",[
+              title={curDuty}
+              onPress={() => Alert.alert("Update Duty Status","testing",[
                 {
                   text: 'Cancel',
                   style:"cancel"
@@ -206,7 +219,7 @@ export default class ProfileScreen extends React.Component {
                   onPress: () => {
                     const itemID = item.id + "";
                     console.log(itemID)
-                    console.log(curStat)
+                    console.log(curDuty)
                     fetch("https://alert-qc.com/mobile/RespoOnDuty.php", {
                       method: "POST",
                       headers: {
@@ -215,7 +228,50 @@ export default class ProfileScreen extends React.Component {
                       },
                       body: JSON.stringify({
                         respoID: itemID,
-                        respoStatus : curStat,
+                        respoStatus : curDuty,
+
+                      }),
+                    })
+                    .then((response) => response.json())
+                    .then((responseJson) => {
+                      // If the Data matched.
+                      if (responseJson === "Loading~") {
+                      } else {
+                      }
+                    })
+                    .catch((err) => {
+                      console.error(err);
+                    });
+                    this.componentDidMount();
+                  }
+                  
+                },
+              ])}/>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.buttonStatus}>
+              <Button 
+              color={butCol}
+              title={isAct}
+              onPress={() => Alert.alert("Update Current Status","testing",[
+                {
+                  text: 'Cancel',
+                  style:"cancel"
+                },
+                {
+                  text: 'Update',
+                  onPress: () => {
+                    const itemID = item.id + "";
+                    console.log(itemID)
+                    console.log(isAct)
+                    fetch("https://alert-qc.com/mobile/respoOnActive.php", {
+                      method: "POST",
+                      headers: {
+                        Accept: "application/json",
+                        "Content-Type": "application/json",
+                      },
+                      body: JSON.stringify({
+                        respoID: itemID,
+                        respoStatus : isAct,
 
                       }),
                     })
@@ -238,8 +294,8 @@ export default class ProfileScreen extends React.Component {
           </Text>
         </View>
     );
-    }else if (status === 'false') {
-      curStat = "Off Duty"
+    }else if (isDuty === 'false') {
+      curDuty = "Off Duty"
       return (
         <View style={styles.itemCard}>
           <Text style={styles.itemText}>
@@ -256,8 +312,8 @@ export default class ProfileScreen extends React.Component {
             <TouchableOpacity style={styles.buttonDuty}>
               <Button 
               color='#660000'
-              title={curStat}
-              onPress={() => Alert.alert("Update Status","testing",[
+              title={curDuty}
+              onPress={() => Alert.alert("Update Duty Status","testing",[
                 {
                   text: 'Cancel',
                   style:"cancel"
@@ -267,7 +323,7 @@ export default class ProfileScreen extends React.Component {
                   onPress: () => {
                     const itemID = item.id + "";
                     console.log(itemID)
-                    console.log(curStat)
+                    console.log(curDuty)
                     fetch("https://alert-qc.com/mobile/RespoOnDuty.php", {
                       method: "POST",
                       headers: {
@@ -276,7 +332,7 @@ export default class ProfileScreen extends React.Component {
                       },
                       body: JSON.stringify({
                         respoID: itemID,
-                        respoStatus : curStat,
+                        respoStatus : curDuty,
 
                       }),
                     })
@@ -295,6 +351,49 @@ export default class ProfileScreen extends React.Component {
                 },
               ])}/>
             </TouchableOpacity>
+            <TouchableOpacity style={styles.buttonStatus}>
+              <Button 
+              color={butCol}
+              title={isAct}
+              onPress={() => Alert.alert("Update Current Status","testing",[
+                {
+                  text: 'Cancel',
+                  style:"cancel"
+                },
+                {
+                  text: 'Update',
+                  onPress: () => {
+                    const itemID = item.id + "";
+                    console.log(itemID)
+                    console.log(isAct)
+                    fetch("https://alert-qc.com/mobile/respoOnActive.php", {
+                      method: "POST",
+                      headers: {
+                        Accept: "application/json",
+                        "Content-Type": "application/json",
+                      },
+                      body: JSON.stringify({
+                        respoID: itemID,
+                        respoStatus : isAct,
+
+                      }),
+                    })
+                    .then((response) => response.json())
+                    .then((responseJson) => {
+                      // If the Data matched.
+                      if (responseJson === "Loading~") {
+                      } else {
+                      }
+                    })
+                    .catch((err) => {
+                      console.error(err);
+                    });
+                    this.componentDidMount();
+                  }
+                  
+                },
+              ])}/>
+            </TouchableOpacity>  
           </Text>
         </View>
     );
@@ -305,6 +404,8 @@ export default class ProfileScreen extends React.Component {
         </View>
       );
     }
+
+    
     
     
   };
@@ -374,6 +475,13 @@ const styles = StyleSheet.create({
   buttonDuty: {
     textAlign: 'center',
     justifyContent: 'center',
+    width: Dimensions.get("screen").width * 0.436,
+
+  },
+  buttonStatus: {
+    textAlign: 'center',
+    justifyContent: 'center',
+    width: Dimensions.get("screen").width * 0.436,
 
   },
   statusCheck: {
