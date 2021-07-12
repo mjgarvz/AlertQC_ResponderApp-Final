@@ -1,9 +1,6 @@
 import * as React from "react";
-import { View, Text, Button } from "react-native";
-import { NavigationContainer, StackActions } from "@react-navigation/native";
 import {
   createStackNavigator,
-  HeaderBackButton,
 } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { SimpleLineIcons } from "@expo/vector-icons";
@@ -15,7 +12,6 @@ import ProfileScreen from "./Profile";
 
 //landing
 import CreateChatScreen from "./CreateChatScreen";
-import { TouchableOpacity } from "react-native";
 import { Alert } from "react-native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 

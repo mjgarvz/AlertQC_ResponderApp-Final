@@ -1,6 +1,6 @@
-import React, { Component, useState } from "react";
+import React, { Component } from "react";
 import { Alert } from "react-native";
-import { KeyboardAvoidingView, View, Text, StyleSheet, TextInput, Dimensions, Button, ScrollView, SafeAreaView, FlatList,TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, TextInput, Dimensions, Button, SafeAreaView, FlatList } from "react-native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 

@@ -6,11 +6,9 @@ import {
   View,
   Text,
   Linking,
-  TextInput,
   TouchableOpacity,
   Clipboard,
   ToastAndroid,
-  AlertIos,
   Alert,
 } from "react-native";
 import AsyncStorage from '@react-native-async-storage/async-storage';

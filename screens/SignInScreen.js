@@ -1,12 +1,10 @@
-import React, { useState, Component } from "react";
+import React, { Component } from "react";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   View,
   Text,
   Button,
   StyleSheet,
-  SafeAreaView,
-  StatusBar,
   Alert,
   TextInput,
   TouchableOpacity,
@@ -17,10 +15,6 @@ import {
   AlertIOS,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { Base64 } from "js-base64";
-import { SimpleLineIcons } from "@expo/vector-icons";
-
-import CallButton from "../components/ButtonBasic";
 
 class SignInScreen extends Component {
   constructor(props) {

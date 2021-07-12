@@ -1,8 +1,6 @@
 import React from "react";
 
 import { createStackNavigator } from "@react-navigation/stack";
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { SimpleLineIcons } from "@expo/vector-icons";
 
 import SignInScreen from "./SignInScreen";
 import MainTabScreen from "./MainTabScreen";
