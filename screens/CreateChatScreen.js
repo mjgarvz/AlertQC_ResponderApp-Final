@@ -1,7 +1,9 @@
-import React, { Component, useState } from "react";
+import React, { Component } from "react";
 import { Alert } from "react-native";
-import { KeyboardAvoidingView, View, Text, StyleSheet, TextInput, Dimensions, Button, ScrollView, SafeAreaView, FlatList,TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, TextInput, Dimensions, Button, SafeAreaView, FlatList } from "react-native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { KeyboardAvoidingView } from "react-native";
+import { ScrollView } from "react-native";
 
 
 export default class CreateChatScreen extends Component {
@@ -107,8 +109,8 @@ export default class CreateChatScreen extends Component {
       <View></View>;
     }
     return (
-      <SafeAreaView>
-
+      <KeyboardAvoidingView>
+        <ScrollView>
         <View style={styles.container}>
           <View style={styles.chatScreen}>
           <FlatList keyboardShouldPersistTaps='always'
@@ -120,7 +122,7 @@ export default class CreateChatScreen extends Component {
           ></FlatList>
           </View>
         </View>
-        <View style={styles.subButt} keyboardShouldPersistTaps='always'>
+        <View style={styles.subButt}>
         <View style={styles.form}>
            <Text >Message:</Text>
            <TextInput
@@ -136,8 +138,9 @@ export default class CreateChatScreen extends Component {
          </View>
          <Button title="Send Chat" onPress={() => {this.SendMsg(); this.setState({ userMessage: ""})}}/>
        </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
 
-      </SafeAreaView>
     );
   }
 }
@@ -169,7 +172,7 @@ const styles = StyleSheet.create({
       paddingVertical: 5
   },
   chatScreen:{
-    height: Dimensions.get("screen").height * 0.30,
+    height: Dimensions.get("screen").height * 0.60,
 
     
   },

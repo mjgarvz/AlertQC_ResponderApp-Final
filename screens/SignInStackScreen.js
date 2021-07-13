@@ -1,12 +1,9 @@
 import React from "react";
 
 import { createStackNavigator } from "@react-navigation/stack";
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { SimpleLineIcons } from "@expo/vector-icons";
 
 import SignInScreen from "./SignInScreen";
 import MainTabScreen from "./MainTabScreen";
-import HomeScreen from "./HomeScreen";
 const SignInStack = createStackNavigator();
 
 const SignInStackScreen = ({ navigation }) => (
@@ -30,7 +27,7 @@ const SignInStackScreen = ({ navigation }) => (
         headerTitleAlign: "center",
       }}
     />
-    <SignInStack.Screen name="MainTab" component={HomeScreen} />
+    <SignInStack.Screen name="MainTab" component={MainTabScreen} />
   </SignInStack.Navigator>
 );
 export default SignInStackScreen;
