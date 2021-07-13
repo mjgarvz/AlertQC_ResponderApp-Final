@@ -35,9 +35,9 @@ export default class ProfileScreen extends React.Component {
       emailAdd: "",
       respoAdd: "",
     };
-    // setInterval(() => {
-    //   this.componentDidMount();
-    // }, 1000);
+    setInterval(() => {
+      this.componentDidMount();
+    }, 1000);
   }
 
   _emptyList = () => {
@@ -249,14 +249,6 @@ export default class ProfileScreen extends React.Component {
     });
   }
   _renderItem = ({ item, index }) => {
-    // this.setState({
-    //   firstName: item.first_name,
-    //   middleName: item.middle_name,
-    //   lastName: item.last_name,
-    //   conNum: item.contact,
-    //   emailAdd: item.email,
-    //   respoAdd: item.address
-    // });
 
     this.state.firstName = item.first_name + "";
     this.state.middleName = item.middle_name + "";

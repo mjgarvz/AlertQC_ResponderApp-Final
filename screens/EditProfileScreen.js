@@ -9,11 +9,13 @@ import {
   StyleSheet,
   FlatList,
   TextInput,
+  Alert,
 } from "react-native";
 import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { KeyboardAvoidingView } from "react-native";
 import { ScrollView } from "react-native";
+import { disableExpoCliLogging } from "expo/build/logs/Logs";
 
 //landing
 
@@ -33,14 +35,15 @@ export default class EditProfileScreen extends Component {
       emailAdd: this.props.route.params.emailAddress,
       respoAdd: this.props.route.params.respoderAddress,
 
-      newFirstName: "",
-      newMiddleName: "",
-      newLastName: "",
-      newContactNumber: "",
-      newEmailAddress: "",
-      newResponderAddress: "",
+      newFirstName: this.props.route.params.fname,
+      newMiddleName: this.props.route.params.mname,
+      newLastName: this.props.route.params.lname,
+      newContactNumber: this.props.route.params.contactNum,
+      newEmailAddress: this.props.route.params.emailAddress,
+      newResponderAddress: this.props.route.params.respoderAddress,
     };
   }
+
 
   componentDidMount() {
     AsyncStorage.getItem("userEmail").then((data) => {
@@ -85,32 +88,38 @@ export default class EditProfileScreen extends Component {
                 <Text style={styles.headerText}>First Name:</Text>
                 <TextInput
                   style={styles.inputTextF}
-                  value={this.state.firstName}
+                  defaultValue={this.state.firstName}
+                  onChangeText={(data) => this.setState({ newFirstName: data })}
                 ></TextInput>
                 <Text style={styles.headerText}>Middle Name:</Text>
                 <TextInput
                   style={styles.inputTextF}
-                  value={this.state.middleName}
+                  defaultValue={this.state.middleName}
+                  onChangeText={(data) => this.setState({ newMiddleName: data })}
                 ></TextInput>
                 <Text style={styles.headerText}>Last Name:</Text>
                 <TextInput
                   style={styles.inputTextF}
-                  value={this.state.lastName}
+                  defaultValue={this.state.lastName}
+                  onChangeText={(data) => this.setState({ newLastName: data })}
                 ></TextInput>
                 <Text style={styles.headerText}>Contact:</Text>
                 <TextInput
                   style={styles.inputTextF}
-                  value={this.state.conNum}
+                  defaultValue={this.state.conNum}
+                  onChangeText={(data) => this.setState({ newContactNumber: data })}
                 ></TextInput>
                 <Text style={styles.headerText}>Email:</Text>
                 <TextInput
                   style={styles.inputTextF}
-                  value={this.state.emailAdd}
+                  defaultValue={this.state.emailAdd}
+                  onChangeText={(data) => this.setState({ newEmailAddress: data })}
                 ></TextInput>
                 <Text style={styles.headerText}>Address:</Text>
                 <TextInput
                   style={styles.inputTextF}
-                  value={this.state.respoAdd}
+                  defaultValue={this.state.respoAdd}
+                  onChangeText={(data) => this.setState({ newResponderAddress: data })}
                 ></TextInput>
               </View>
             </Text>
@@ -120,7 +129,17 @@ export default class EditProfileScreen extends Component {
                   color="#ff8000"
                   title="Cancel"
                   onPress={() => {
-                    this.props.navigation.goBack(null);
+                    Alert.alert("Cancel?", "Canceling will discard all changes made",[
+                        {
+                            text: "Cancel",
+                            style: "cancel"
+                        },
+                        {
+                            text: "Discard",
+                            onPress : ()=>{this.props.navigation.goBack(null)}
+                        },
+                    ])
+                    
                     console.log("CreateChat");
                   }}
                 ></Button>
@@ -128,14 +147,21 @@ export default class EditProfileScreen extends Component {
 
               <TouchableWithoutFeedback style={styles.buttonUpdate}>
                 <Button
+                  title="update"
                   color="#87c830"
-                  title="Update"
                   onPress={() => {
                     //add update onpress
-                    console.log("CreateChat");
+                    //fetch
+                    
+                    console.log(this.state.newFirstName.length);
+                    console.log(this.state.newFirstName)
                     console.log(this.state.firstName);
+
+                    console.log(this.state.newMiddleName);
+                    console.log(this.state.middleName);
                   }}
-                ></Button>
+                ><Text>Update</Text>
+                </Button>
               </TouchableWithoutFeedback>
             </View>
           </View>
