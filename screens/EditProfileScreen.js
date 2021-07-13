@@ -27,6 +27,7 @@ export default class EditProfileScreen extends Component {
       dataSource: [],
       Email: "",
       status: "",
+      repoID: this.props.route.params.rID,
       //responderStates
       firstName: this.props.route.params.fname,
       middleName: this.props.route.params.mname,
@@ -43,7 +44,6 @@ export default class EditProfileScreen extends Component {
       newResponderAddress: this.props.route.params.respoderAddress,
     };
   }
-
 
   componentDidMount() {
     AsyncStorage.getItem("userEmail").then((data) => {
@@ -95,7 +95,9 @@ export default class EditProfileScreen extends Component {
                 <TextInput
                   style={styles.inputTextF}
                   defaultValue={this.state.middleName}
-                  onChangeText={(data) => this.setState({ newMiddleName: data })}
+                  onChangeText={(data) =>
+                    this.setState({ newMiddleName: data })
+                  }
                 ></TextInput>
                 <Text style={styles.headerText}>Last Name:</Text>
                 <TextInput
@@ -107,19 +109,25 @@ export default class EditProfileScreen extends Component {
                 <TextInput
                   style={styles.inputTextF}
                   defaultValue={this.state.conNum}
-                  onChangeText={(data) => this.setState({ newContactNumber: data })}
+                  onChangeText={(data) =>
+                    this.setState({ newContactNumber: data })
+                  }
                 ></TextInput>
                 <Text style={styles.headerText}>Email:</Text>
                 <TextInput
                   style={styles.inputTextF}
                   defaultValue={this.state.emailAdd}
-                  onChangeText={(data) => this.setState({ newEmailAddress: data })}
+                  onChangeText={(data) =>
+                    this.setState({ newEmailAddress: data })
+                  }
                 ></TextInput>
                 <Text style={styles.headerText}>Address:</Text>
                 <TextInput
                   style={styles.inputTextF}
                   defaultValue={this.state.respoAdd}
-                  onChangeText={(data) => this.setState({ newResponderAddress: data })}
+                  onChangeText={(data) =>
+                    this.setState({ newResponderAddress: data })
+                  }
                 ></TextInput>
               </View>
             </Text>
@@ -129,17 +137,23 @@ export default class EditProfileScreen extends Component {
                   color="#ff8000"
                   title="Cancel"
                   onPress={() => {
-                    Alert.alert("Cancel?", "Canceling will discard all changes made",[
+                    Alert.alert(
+                      "Cancel?",
+                      "Canceling will discard all changes made",
+                      [
                         {
-                            text: "Cancel",
-                            style: "cancel"
+                          text: "Cancel",
+                          style: "cancel",
                         },
                         {
-                            text: "Discard",
-                            onPress : ()=>{this.props.navigation.goBack(null)}
+                          text: "Discard",
+                          onPress: () => {
+                            this.props.navigation.goBack(null);
+                          },
                         },
-                    ])
-                    
+                      ]
+                    );
+
                     console.log("CreateChat");
                   }}
                 ></Button>
@@ -150,17 +164,54 @@ export default class EditProfileScreen extends Component {
                   title="update"
                   color="#87c830"
                   onPress={() => {
-                    //add update onpress
-                    //fetch
-                    
-                    console.log(this.state.newFirstName.length);
-                    console.log(this.state.newFirstName)
-                    console.log(this.state.firstName);
+                    fetch("https://alert-qc.com/mobile/updateRespoUser.php", {
+                      method: "POST",
+                      headers: {
+                        Accept: "application/json",
+                        "Content-Type": "application/json",
+                      },
+                      body: JSON.stringify({
+                        phpRID: this.state.repoID,
+                        phpFname: this.state.newFirstName,
+                        phpMname: this.state.newMiddleName,
+                        phpLname: this.state.newLastName,
+                        phpCPnum: this.state.newContactNumber,
+                        phpEadd: this.state.newEmailAddress,
+                        phpRadd: this.state.newResponderAddress,
+                      }),
+                    })
+                      .then((response) => response.json())
+                      .then((responseJson) => {
+                        // If the Data matched.
+                        if (responseJson === "Updated!") {
+                          Alert.alert(
+                            responseJson + "",
+                            "Do you wish to continue making changes?",
+                            [
+                              {
+                                text: "Yes",
+                                style: "cancel",
+                              },
+                              {
+                                text: "No",
+                                onPress: () => {
+                                  this.props.navigation.goBack(null);
+                                },
+                              },
+                            ]
+                          );
+                        } else {
+                          Alert.alert(responseJson);
+                        }
+                      })
+                      .catch((err) => {
+                        console.error(err);
+                      });
 
-                    console.log(this.state.newMiddleName);
-                    console.log(this.state.middleName);
+                    console.log(this.state.repoID);
                   }}
-                ><Text>Update</Text>
+                >
+                  <Text>Update</Text>
                 </Button>
               </TouchableWithoutFeedback>
             </View>

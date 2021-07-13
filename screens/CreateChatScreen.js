@@ -122,7 +122,7 @@ export default class CreateChatScreen extends Component {
           ></FlatList>
           </View>
         </View>
-        <View style={styles.subButt} keyboardShouldPersistTaps='always'>
+        <View style={styles.subButt}>
         <View style={styles.form}>
            <Text >Message:</Text>
            <TextInput

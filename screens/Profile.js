@@ -28,6 +28,7 @@ export default class ProfileScreen extends React.Component {
       Email: "",
       status: "",
       //respoCreds
+      respoUID: "",
       firstName: "",
       middleName: "",
       lastName: "",
@@ -249,7 +250,7 @@ export default class ProfileScreen extends React.Component {
     });
   }
   _renderItem = ({ item, index }) => {
-
+    this.state.respoUID = item.id + ""
     this.state.firstName = item.first_name + "";
     this.state.middleName = item.middle_name + "";
     this.state.lastName = item.last_name + "";
@@ -341,7 +342,9 @@ export default class ProfileScreen extends React.Component {
               <Button
                 title="Edit Profile"
                 onPress={() => {
+                  console.log(this.state.respoUID)
                   this.props.navigation.navigate("EditProfile", {
+                    rID: this.state.respoUID,
                     fname: this.state.firstName,
                     mname: this.state.middleName,
                     lname: this.state.lastName,
