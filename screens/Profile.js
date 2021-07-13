@@ -14,7 +14,8 @@ import {
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { TextInput } from "react-native";
-import { showLocation } from 'react-native-map-link'
+import { showLocation } from "react-native-map-link";
+import CallButton from "./../components/ButtonBasic";
 
 export default class ProfileScreen extends React.Component {
   constructor(props) {
@@ -26,10 +27,17 @@ export default class ProfileScreen extends React.Component {
       dataSourceTwo: [],
       Email: "",
       status: "",
+      //respoCreds
+      firstName: "",
+      middleName: "",
+      lastName: "",
+      conNum: "",
+      emailAdd: "",
+      respoAdd: "",
     };
-    setInterval(() => {
-      this.componentDidMount();
-    }, 1000);
+    // setInterval(() => {
+    //   this.componentDidMount();
+    // }, 1000);
   }
 
   _emptyList = () => {
@@ -110,7 +118,6 @@ export default class ProfileScreen extends React.Component {
                         console.error(err);
                       });
 
-                      
                     this.componentDidMount();
                   },
                 },
@@ -150,31 +157,35 @@ export default class ProfileScreen extends React.Component {
                 {item.injuries + "\n"}
               </Text>
               <TouchableOpacity style={styles.buttonDuty}>
-              <Button 
-              color="#FF8000"
-              title="Call"
-              onPress={() => {
-                Linking.openURL("tel: " + item.phone);
-              }}
-              ></Button>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.buttonDuty}>
-              <Button 
-              color="#FF8000"
-              title="Navigate"
-              onPress={() => {
-                const desti = item.location_of_incident +", " + item.barangay+ ", Quezon City, Metro Manila"
-                        const end = desti.toString()
-                        console.log(end)
+                <Button
+                  color="#FF8000"
+                  title="Call"
+                  onPress={() => {
+                    Linking.openURL("tel: " + item.phone);
+                  }}
+                ></Button>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.buttonDuty}>
+                <Button
+                  color="#FF8000"
+                  title="Navigate"
+                  onPress={() => {
+                    const desti =
+                      item.location_of_incident +
+                      ", " +
+                      item.barangay +
+                      ", Quezon City, Metro Manila";
+                    const end = desti.toString();
+                    console.log(end);
 
-                        showLocation({
-                          longitude: 0,
-                          latitude: 0,
-                          title: end
-                        })
-              }}
-              ></Button>
-            </TouchableOpacity>
+                    showLocation({
+                      longitude: 0,
+                      latitude: 0,
+                      title: end,
+                    });
+                  }}
+                ></Button>
+              </TouchableOpacity>
             </Text>
           </View>
         </TouchableOpacity>
@@ -188,7 +199,7 @@ export default class ProfileScreen extends React.Component {
       if (data) {
         //If userEmail has data -> email
         var uEmail = JSON.parse(data);
-        this.state.Email = uEmail
+        this.state.Email = uEmail;
         fetch("https://alert-qc.com/mobile/load_Respo_user.php", {
           method: "POST",
           headers: {
@@ -238,11 +249,27 @@ export default class ProfileScreen extends React.Component {
     });
   }
   _renderItem = ({ item, index }) => {
-    const name = item.first_name + " " + item.middle_name + " " + item.last_name;
+    // this.setState({
+    //   firstName: item.first_name,
+    //   middleName: item.middle_name,
+    //   lastName: item.last_name,
+    //   conNum: item.contact,
+    //   emailAdd: item.email,
+    //   respoAdd: item.address
+    // });
+
+    this.state.firstName = item.first_name + "";
+    this.state.middleName = item.middle_name + "";
+    this.state.lastName = item.last_name + "";
+    this.state.conNum = item.contact + "";
+    this.state.emailAdd = item.email + "";
+    this.state.respoAdd = item.address + "";
+
+    const name = item.first_name + " " + item.last_name;
     const cont = item.contact;
     const email = item.email;
     //user id
-    const ID = item.id + ""
+    const ID = item.id + "";
 
     //update onDutyStatus
     const isDuty = item.on_duty;
@@ -262,7 +289,7 @@ export default class ProfileScreen extends React.Component {
     if (isActive === "Available") {
       isAct = "Available";
       butCol = "#87c830";
-      var responderID = ID
+      var responderID = ID;
       fetch("https://alert-qc.com/mobile/respoOnActive.php", {
         method: "POST",
         headers: {
@@ -287,7 +314,7 @@ export default class ProfileScreen extends React.Component {
     } else if (isActive === "On Call") {
       isAct = "On Call";
       butCol = "#660000";
-      var responderID = ID
+      var responderID = ID;
       fetch("https://alert-qc.com/mobile/respoOnActive.php", {
         method: "POST",
         headers: {
@@ -311,16 +338,30 @@ export default class ProfileScreen extends React.Component {
         });
     }
 
-
-
     if (name !== null) {
       return (
         <View style={styles.itemCard}>
           <Text style={styles.itemText}>
-            <Text style={styles.accHead}>Name:</Text>
-            <TextInput editable={false}>{"\n" + name + "\n"}</TextInput>
+            <TextInput style={styles.nameHead} editable={false}>
+              {"\n" + name + "\n"}
+            </TextInput>
+            <TouchableOpacity>
+              <Button
+                title="Edit Profile"
+                onPress={() => {
+                  this.props.navigation.navigate("EditProfile", {
+                    fname: this.state.firstName,
+                    mname: this.state.middleName,
+                    lname: this.state.lastName,
+                    contactNum: this.state.conNum,
+                    emailAddress: this.state.emailAdd,
+                    respoderAddress: this.state.respoAdd,
+                  });
+                }}
+              />
+            </TouchableOpacity>
 
-            <Text style={styles.accHead}>Contact:</Text>
+            <Text style={styles.accHead}>{"\n"}Contact:</Text>
             <TextInput editable={false}>{"\n" + cont + "\n"}</TextInput>
 
             <Text style={styles.accHead}>Email:</Text>
@@ -332,7 +373,7 @@ export default class ProfileScreen extends React.Component {
                 color={butColOne}
                 title={curDuty}
                 onPress={() =>
-                  Alert.alert("Update Duty Status", "testing", [
+                  Alert.alert("Update Duty Status", "", [
                     {
                       text: "Cancel",
                       style: "cancel",
@@ -382,7 +423,6 @@ export default class ProfileScreen extends React.Component {
                     {
                       text: "Update",
                       onPress: () => {
-                        
                         this.componentDidMount();
                       },
                     },
@@ -449,11 +489,11 @@ const styles = StyleSheet.create({
   container: {
     justifyContent: "center",
     alignItems: "center",
-    padding: 10,
-    paddingTop: 50,
+    paddingTop: 0,
   },
   itemCard: {
     padding: 25,
+    paddingTop: 0,
     width: Dimensions.get("screen").width,
   },
   itemText: {
@@ -489,7 +529,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     width: Dimensions.get("screen").width * 0.436,
   },
-
   statusCheck: {
     width: Dimensions.get("screen").width,
     backgroundColor: "#660000",
@@ -498,11 +537,13 @@ const styles = StyleSheet.create({
     color: "#fff",
     textAlign: "center",
     fontSize: 25,
-    paddingTop: 5,
-    paddingBottom: 5,
+    padding: -5,
   },
   repCard: {
     padding: 25,
     width: Dimensions.get("screen").width,
+  },
+  nameHead: {
+    fontSize: 24,
   },
 });

@@ -11,9 +11,9 @@ import {
   ToastAndroid,
   Alert,
 } from "react-native";
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { OpenMapDirections } from 'react-native-navigation-directions';
-import { showLocation } from 'react-native-map-link'
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { OpenMapDirections } from "react-native-navigation-directions";
+import { showLocation } from "react-native-map-link";
 
 export default class IncidentScreen extends React.Component {
   constructor(props) {
@@ -21,7 +21,7 @@ export default class IncidentScreen extends React.Component {
     this.state = {
       isLoading: true,
       dataSource: [],
-      Email : '',
+      Email: "",
     };
     setInterval(() => {
       this._loadPage();
@@ -29,23 +29,21 @@ export default class IncidentScreen extends React.Component {
   }
   //MAP NAV
   _callShowDirections = () => {
-
-
     const endPoint = {
       longitude: 121.0493,
-      latitude: 14.6516
-    }
+      latitude: 14.6516,
+    };
 
-    console.log(endPoint)
+    console.log(endPoint);
 
-		const transportPlan = 'd';
+    const transportPlan = "d";
 
-    OpenMapDirections(null, endPoint , transportPlan).then(res => {
-      console.log(res)
+    OpenMapDirections(null, endPoint, transportPlan).then((res) => {
+      console.log(res);
     });
-  }
+  };
   //load page
-  _loadPage(){
+  _loadPage() {
     fetch("https://alert-qc.com/mobile/reportsOnProc.php")
       .then((response) => response.json())
       .then((reseponseJson) => {
@@ -55,15 +53,15 @@ export default class IncidentScreen extends React.Component {
         });
       });
   }
-  
- //PAGE LOAD
+
+  //PAGE LOAD
   componentDidMount() {
     AsyncStorage.getItem("userEmail").then((data) => {
       if (data) {
         //If userEmail has data -> email
-        Email = JSON.parse(data) 
-      }else{
-        console.log("error")
+        Email = JSON.parse(data);
+      } else {
+        console.log("error");
       }
     });
 
@@ -75,141 +73,162 @@ export default class IncidentScreen extends React.Component {
           dataSource: reseponseJson,
         });
       });
-
   }
   //INCIDENT CARD
 
   _renderItem = ({ item, index }) => {
-    if (item.id === undefined){
-      return(
+    if (item.id === undefined) {
+      return (
         <View>
           <Text>No Available Reports For Now</Text>
         </View>
-      )
-    }else {
-    return (
-      <TouchableOpacity
-        onPress={() => {
-          Alert.alert(
-            "Incident Detail",
-            "Reporter: " +
-              item.first_name +" "+ item.last_name +
-              "\n" +
-              "Location: " +
-              item.location_of_incident +
-              "\n" +
-              "Incident: " +
-              item.incident_type +
-              "\n" +
-              "Injuries: " +
-              item.injuries +
-              "\n" +
-              "Date/Time Reported: " +
-              item.date_time +
-              "\n" +
-              "Short Brief:\n\n" +
-              item.short_description,
-            [
-              {
-                text: "Cancel",
-                style: "cancel",
-              },
-              {
-                text: "Call",
-                onPress: () =>{Linking.openURL("tel: " + item.phone);}
-              },
-              {
-                text: "Respond",
-                onPress: () => {
-                  console.log(Email)
-                  const repID = item.id + "";
-                  console.log(repID)
-                  fetch("https://alert-qc.com/mobile/updateStatusAssign.php", {
-                    method: "POST",
-                    headers: {
-                      Accept: "application/json",
-                      "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                      username: Email,
-                      report: repID,
-                    }),
-                  })
-                  .then((response) => response.json())
-                  .then((responseJson) => {
-                    // If the Data matched.
-                    if (responseJson === "Loading~") {
-                    } else {
-                    }
-                  })
-                  .catch((err) => {
-                    console.error(err);
-                  });
-                  
-                  Alert.alert("Assignment Update","This incident is now assigned to you",
-                  [
-                    {
-                      text: 'Cancel',
-                      style:"cancel"
-                    },
-                    {
-                      text: "Go To Navigation",
-                      onPress: () => {
-                        Clipboard.setString(item.location_of_incident);
-                        if (Platform.OS === "android") {
-                          ToastAndroid.show(
-                            "Location Copied to Clipboard",
-                            ToastAndroid.SHORT
-                          );
+      );
+    } else {
+      return (
+        <TouchableOpacity
+          onPress={() => {
+            Alert.alert(
+              "Incident Detail",
+              "Reporter: " +
+                item.first_name +
+                " " +
+                item.last_name +
+                "\n" +
+                "Location: " +
+                item.location_of_incident +
+                "\n" +
+                "Incident: " +
+                item.incident_type +
+                "\n" +
+                "Injuries: " +
+                item.injuries +
+                "\n" +
+                "Date/Time Reported: " +
+                item.date_time +
+                "\n" +
+                "Short Brief:\n\n" +
+                item.short_description,
+              [
+                {
+                  text: "Cancel",
+                  style: "cancel",
+                },
+                {
+                  text: "Call",
+                  onPress: () => {
+                    Linking.openURL("tel: " + item.phone);
+                  },
+                },
+                {
+                  text: "Respond",
+                  onPress: () => {
+                    console.log(Email);
+                    const repID = item.id + "";
+                    console.log(repID);
+                    fetch(
+                      "https://alert-qc.com/mobile/updateStatusAssign.php",
+                      {
+                        method: "POST",
+                        headers: {
+                          Accept: "application/json",
+                          "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({
+                          username: Email,
+                          report: repID,
+                        }),
+                      }
+                    )
+                      .then((response) => response.json())
+                      .then((responseJson) => {
+                        // If the Data matched.
+                        if (responseJson === "Loading~") {
                         } else {
-                          AlertIOS.alert("Location Copied to Clipboard");
-      
                         }
-                        const desti = item.location_of_incident +", " + item.barangay+ ", Quezon City, Metro Manila"
-                        const end = desti.toString()
-                        const start = "My Location"
-                        const travelType = 'drive';
+                      })
+                      .catch((err) => {
+                        console.error(err);
+                      });
 
-                        console.log(end)
+                    Alert.alert(
+                      "Assignment Update",
+                      "This incident is now assigned to you",
+                      [
+                        {
+                          text: "Cancel",
+                          style: "cancel",
+                        },
+                        {
+                          text: "Go To Navigation",
+                          onPress: () => {
+                            Clipboard.setString(item.location_of_incident);
+                            if (Platform.OS === "android") {
+                              ToastAndroid.show(
+                                "Location Copied to Clipboard",
+                                ToastAndroid.SHORT
+                              );
+                            } else {
+                              AlertIOS.alert("Location Copied to Clipboard");
+                            }
+                            const desti =
+                              item.location_of_incident +
+                              ", " +
+                              item.barangay +
+                              ", Quezon City, Metro Manila";
+                            const end = desti.toString();
+                            const start = "My Location";
+                            const travelType = "drive";
 
-                        showLocation({
-                          longitude: 0,
-                          latitude: 0,
-                          title: end
-                        })
-                      },
-                    }
-                  ]
-                );
-              },
-              },
-            ]
-          );
-        }}
-      >
-        <View style={styles.itemCard}>
-          <Text style={styles.itemText}>
-            <Text style={styles.accHead}>Reporter:</Text>
-            <Text style={styles.itemVal} editable={false}>{item.first_name +" "+ item.last_name+"\n"}</Text>
+                            console.log(end);
 
-            <Text style={styles.accHead}>Barangay:</Text>
-            <Text style={styles.itemVal} editable={false}>{item.barangay+"\n"}</Text>
+                            showLocation({
+                              longitude: 0,
+                              latitude: 0,
+                              title: end,
+                            });
+                          },
+                        },
+                      ]
+                    );
+                  },
+                },
+              ]
+            );
+          }}
+        >
+          <View style={styles.itemCard}>
+            <Text style={styles.itemText}>
+              <Text style={styles.accHead}>Reporter:</Text>
+              <Text style={styles.itemVal} editable={false}>
+                {item.first_name + " " + item.last_name + "\n"}
+              </Text>
 
-            <Text style={styles.accHead}>Location:</Text>
-            <Text style={styles.itemVal} editable={false}>{item.location_of_incident+"\n"}</Text>
+              <Text style={styles.accHead}>Barangay:</Text>
+              <Text style={styles.itemVal} editable={false}>
+                {item.barangay + "\n"}
+              </Text>
 
-            <Text style={styles.accHead}>Incident:</Text>
-            <Text style={styles.itemVal} editable={false}>{item.incident_type+"\n"}</Text>
+              <Text style={styles.accHead}>Location:</Text>
+              <Text style={styles.itemVal} editable={false}>
+                {item.location_of_incident + "\n"}
+              </Text>
 
-            {/* <Text >SATUS:</Text>
+              <Text style={styles.accHead}>Incident:</Text>
+              <Text style={styles.itemVal} editable={false}>
+                {item.incident_type + "\n"}
+              </Text>
+
+              {/* <Text >SATUS:</Text>
             <Text style={styles.itemVal} editable={false}>{item.status+"\n"}</Text> */}
 
-            <Text style={styles.accHead}>Contact:</Text>
-            <Text style={styles.itemVal} editable={false}>{item.phone}</Text>
-          </Text>
-        </View>
-      </TouchableOpacity>
-    );
+              <Text style={styles.accHead}>Contact:</Text>
+              <Text style={styles.itemVal} editable={false}>
+                {item.phone}
+              </Text>
+            </Text>
+          </View>
+        </TouchableOpacity>
+      );
     }
   };
 
@@ -218,7 +237,7 @@ export default class IncidentScreen extends React.Component {
     if (isLoading) {
       <View></View>;
     }
-    
+
     return (
       <SafeAreaView>
         <View styles={styles.container}>
@@ -259,7 +278,5 @@ const styles = StyleSheet.create({
     fontSize: 15,
     color: "grey",
   },
-  itemVal: {
-
-  },
+  itemVal: {},
 });

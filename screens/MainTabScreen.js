@@ -1,7 +1,5 @@
 import * as React from "react";
-import {
-  createStackNavigator,
-} from "@react-navigation/stack";
+import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { SimpleLineIcons } from "@expo/vector-icons";
 import CallButton from "../components/ButtonBasic";
@@ -9,11 +7,12 @@ import CallButton from "../components/ButtonBasic";
 import ChatScreen from "./ChatScreen";
 import IncidentScreen from "./IncidentScreen";
 import ProfileScreen from "./Profile";
+import EditProfileScreen from "./EditProfileScreen";
 
 //landing
 import CreateChatScreen from "./CreateChatScreen";
 import { Alert } from "react-native";
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const IncidentStack = createStackNavigator();
 const ProfileStack = createStackNavigator();
@@ -93,7 +92,11 @@ const IncidentStackScreen = ({ navigation }) => (
               ]);
             }}
           >
-            <SimpleLineIcons name="logout" size={24} color="black"></SimpleLineIcons>
+            <SimpleLineIcons
+              name="logout"
+              size={24}
+              color="black"
+            ></SimpleLineIcons>
           </CallButton>
         ),
       }}
@@ -114,7 +117,7 @@ const ProfileStackScreen = ({ navigation }) => (
     }}
   >
     <ProfileStack.Screen
-      name="Map"
+      name="Profile"
       component={ProfileScreen}
       options={{
         title: "Profile Screen",
@@ -136,7 +139,43 @@ const ProfileStackScreen = ({ navigation }) => (
               ]);
             }}
           >
-            <SimpleLineIcons name="logout" size={24} color="black"></SimpleLineIcons>
+            <SimpleLineIcons
+              name="logout"
+              size={24}
+              color="black"
+            ></SimpleLineIcons>
+          </CallButton>
+        ),
+      }}
+    />
+    <ProfileStack.Screen
+      name="EditProfile"
+      component={EditProfileScreen}
+      options={{
+        title: "Edit Profile",
+        headerTitleAlign: "center",
+        headerLeft: () => (
+          <CallButton
+            onPress={() => {
+              Alert.alert("Log Out?", "Are you sure you want to Log Out?", [
+                { text: "Cancel", style: "cancel" },
+                {
+                  text: "Log Out",
+                  onPress: () => {
+                    {
+                      AsyncStorage.clear();
+                      navigation.popToTop();
+                    }
+                  },
+                },
+              ]);
+            }}
+          >
+            <SimpleLineIcons
+              name="logout"
+              size={24}
+              color="black"
+            ></SimpleLineIcons>
           </CallButton>
         ),
       }}
@@ -179,7 +218,11 @@ const ChatStackScreen = ({ navigation }) => (
               ]);
             }}
           >
-            <SimpleLineIcons name="logout" size={24} color="black"></SimpleLineIcons>
+            <SimpleLineIcons
+              name="logout"
+              size={24}
+              color="black"
+            ></SimpleLineIcons>
           </CallButton>
         ),
       }}
@@ -207,7 +250,11 @@ const ChatStackScreen = ({ navigation }) => (
               ]);
             }}
           >
-            <SimpleLineIcons name="logout" size={24} color="black"></SimpleLineIcons>
+            <SimpleLineIcons
+              name="logout"
+              size={24}
+              color="black"
+            ></SimpleLineIcons>
           </CallButton>
         ),
       }}
