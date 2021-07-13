@@ -255,8 +255,10 @@ export default class ProfileScreen extends React.Component {
     this.state.middleName = item.middle_name + "";
     this.state.lastName = item.last_name + "";
     this.state.conNum = item.contact + "";
-    this.state.emailAdd = item.email + "";
-    this.state.respoAdd = item.address + "";
+    //team
+    this.state.emailAdd = item.team + "";
+    //dept
+    this.state.respoAdd = item.department + "";
 
     const name = item.first_name + " " + item.last_name;
     const cont = item.contact;
@@ -338,6 +340,11 @@ export default class ProfileScreen extends React.Component {
             <TextInput style={styles.nameHead} editable={false}>
               {"\n" + name + "\n"}
             </TextInput>
+            <Text style={styles.accHead}>Department:</Text>
+            <TextInput editable={false}>{item.department + "\n"}</TextInput>
+            <Text style={styles.accHead}>Team: </Text>
+            <TextInput editable={false}>{item.team + "\n"}</TextInput>
+            
             <TouchableOpacity>
               <Button
                 title="Edit Profile"
@@ -349,6 +356,7 @@ export default class ProfileScreen extends React.Component {
                     mname: this.state.middleName,
                     lname: this.state.lastName,
                     contactNum: this.state.conNum,
+                    //team and dept
                     emailAddress: this.state.emailAdd,
                     respoderAddress: this.state.respoAdd,
                   });
@@ -356,13 +364,11 @@ export default class ProfileScreen extends React.Component {
               />
             </TouchableOpacity>
 
-            <Text style={styles.accHead}>{"\n"}Contact:</Text>
-            <TextInput editable={false}>{"\n" + cont + "\n"}</TextInput>
+            
 
-            <Text style={styles.accHead}>Email:</Text>
-            <TextInput editable={false}>{"\n" + email + "\n"}</TextInput>
+            
 
-            <Text style={styles.accHead}>Status:{"\n"}</Text>
+            <Text style={styles.accHead}>{"\n"}Status:{"\n"}</Text>
             <TouchableOpacity style={styles.buttonDuty}>
               <Button
                 color={butColOne}
@@ -444,8 +450,8 @@ export default class ProfileScreen extends React.Component {
     }
 
     return (
-      <SafeAreaView>
-        <View>
+      //<SafeAreaView>
+        <View style={styles.container}>
           <View>
             <FlatList
               data={dataSource}
@@ -475,16 +481,13 @@ export default class ProfileScreen extends React.Component {
             </View>
           </View>
         </View>
-      </SafeAreaView>
+      //</SafeAreaView>
     );
   }
 }
 
 const styles = StyleSheet.create({
   container: {
-    justifyContent: "center",
-    alignItems: "center",
-    paddingTop: 0,
   },
   itemCard: {
     padding: 25,

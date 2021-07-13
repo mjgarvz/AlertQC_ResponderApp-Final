@@ -45,35 +45,6 @@ export default class EditProfileScreen extends Component {
     };
   }
 
-  componentDidMount() {
-    AsyncStorage.getItem("userEmail").then((data) => {
-      if (data) {
-        //If userEmail has data -> email
-        var uEmail = JSON.parse(data);
-        this.state.Email = uEmail;
-        fetch("https://alert-qc.com/mobile/load_Respo_user.php", {
-          method: "POST",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            respo_email: uEmail,
-          }),
-        })
-          .then((response) => response.json())
-          .then((reseponseJson) => {
-            this.setState({
-              isLoading: false.valueOf,
-              dataSource: reseponseJson,
-            });
-          });
-      } else {
-        console.log("error");
-      }
-    });
-  }
-
   render() {
     let { dataSource, isLoading } = this.state;
     if (isLoading) {
@@ -113,7 +84,7 @@ export default class EditProfileScreen extends Component {
                     this.setState({ newContactNumber: data })
                   }
                 ></TextInput>
-                <Text style={styles.headerText}>Email:</Text>
+                <Text style={styles.headerText}>Team:</Text>
                 <TextInput
                   style={styles.inputTextF}
                   defaultValue={this.state.emailAdd}
@@ -121,7 +92,7 @@ export default class EditProfileScreen extends Component {
                     this.setState({ newEmailAddress: data })
                   }
                 ></TextInput>
-                <Text style={styles.headerText}>Address:</Text>
+                <Text style={styles.headerText}>Department:</Text>
                 <TextInput
                   style={styles.inputTextF}
                   defaultValue={this.state.respoAdd}
