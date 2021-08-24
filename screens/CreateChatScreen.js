@@ -190,7 +190,7 @@ const styles = StyleSheet.create({
     borderBottomColor: "#ffcd9c",
   },
   itemText: {
-    fontSize: 17,
+    fontSize: 15,
     color: "black",
   },
   subButt: {

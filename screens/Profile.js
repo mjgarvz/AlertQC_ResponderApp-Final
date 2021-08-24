@@ -15,7 +15,6 @@ import {
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { TextInput } from "react-native";
 import { showLocation } from "react-native-map-link";
-import CallButton from "./../components/ButtonBasic";
 
 export default class ProfileScreen extends React.Component {
   constructor(props) {
@@ -363,11 +362,6 @@ export default class ProfileScreen extends React.Component {
                 }}
               />
             </TouchableOpacity>
-
-            
-
-            
-
             <Text style={styles.accHead}>{"\n"}Status:{"\n"}</Text>
             <TouchableOpacity style={styles.buttonDuty}>
               <Button
