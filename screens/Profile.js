@@ -14,7 +14,6 @@ import {
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { TextInput } from "react-native";
-import { showLocation } from "react-native-map-link";
 
 export default class ProfileScreen extends React.Component {
   constructor(props) {

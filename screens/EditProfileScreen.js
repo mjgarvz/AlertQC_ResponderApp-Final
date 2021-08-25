@@ -12,10 +12,8 @@ import {
   Alert,
 } from "react-native";
 import { TouchableWithoutFeedback } from "react-native-gesture-handler";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { KeyboardAvoidingView } from "react-native";
 import { ScrollView } from "react-native";
-import { disableExpoCliLogging } from "expo/build/logs/Logs";
 
 //landing
 
