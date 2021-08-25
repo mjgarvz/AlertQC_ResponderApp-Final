@@ -16,7 +16,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { TextInput } from "react-native";
 import { showLocation } from "react-native-map-link";
 
-export default class ProfileScreen extends React.Component {
+export default class ActiveIncidentScreen extends React.Component {
   constructor(props) {
     super(props);
 
@@ -47,17 +47,122 @@ export default class ProfileScreen extends React.Component {
       </View>
     );
   };
-
+  //active report
   _renderToComplete = ({ item, index }) => {
     if (item.id === undefined) {
       this.state.status = "Available";
-
+      return (
+        <View>
+          <Text></Text>
+        </View>
+      );
     } else {
       this.state.status = "On Call";
-      
+      return (
+          <View style={styles.repCard}>
+            <Text style={styles.itemText}>
+              <Text style={styles.accHead}>Reporter:</Text>
+              <Text style={styles.itemVal} editable={false}>
+                {"\n" + item.first_name + " " + item.last_name + "\n"}
+              </Text>
+
+              <Text style={styles.accHead}>Contact:</Text>
+              <Text style={styles.itemVal} editable={false}>
+                {"\n" + item.phone + "\n"}
+              </Text>
+
+              <Text style={styles.accHead}>Barangay:</Text>
+              <Text style={styles.itemVal} editable={false}>
+                {item.barangay + "\n"}
+              </Text>
+
+              <Text style={styles.accHead}>Location:</Text>
+              <Text style={styles.itemVal} editable={false}>
+                {item.location_of_incident + "\n"}
+              </Text>
+
+              <Text style={styles.accHead}>Incident:</Text>
+              <Text style={styles.itemVal} editable={false}>
+                {item.incident_type + "\n"}
+              </Text>
+
+              <Text style={styles.accHead}>Injuries:</Text>
+              <Text style={styles.itemVal} editable={false}>
+                {item.injuries + "\n"}
+              </Text>
+
+              <Text style={styles.accHead}>Description:</Text>
+              <Text style={styles.itemVal} editable={false}>
+                {item.short_description + "\n"}
+              </Text>
+
+              <Text style={styles.accHead}>Date and Time:</Text>
+              <Text style={styles.itemVal} editable={false}>
+                {item.date_time + "\n"}
+              </Text>
+
+              <TouchableOpacity style={styles.buttonDuty}>
+                <Button
+                  color="#FF8000"
+                  title="Call"
+                  onPress={() => {
+                    Linking.openURL("tel: " + item.phone);
+                  }}
+                ></Button>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.buttonDuty}>
+                <Button
+                  color="#FF8000"
+                  title="Navigate"
+                  onPress={() => {
+                    const desti =
+                      item.location_of_incident +
+                      ", " +
+                      item.barangay +
+                      ", Quezon City, Metro Manila";
+                    const end = desti.toString();
+                    console.log(end);
+
+                    showLocation({
+                      longitude: 0,
+                      latitude: 0,
+                      title: end,
+                    });
+                  }}
+                ></Button>
+              </TouchableOpacity>
+              
+              {/*create report output */}
+              <TouchableOpacity style={styles.buttonComplete}>
+                <Button
+                  color="#FF8000"
+                  title="Complete Report"
+                  onPress={() => {
+                    Linking.openURL("tel: " + item.phone);
+                  }}
+
+  //               title="Edit Profile"
+  //               onPress={() => {
+  //                 console.log(this.state.respoUID)
+  //                 this.props.navigation.navigate("EditProfile", {
+  //                   rID: this.state.respoUID,
+  //                   fname: this.state.firstName,
+  //                   mname: this.state.middleName,
+  //                   lname: this.state.lastName,
+  //                   contactNum: this.state.conNum,
+  //                   //team and dept
+  //                   emailAddress: this.state.emailAdd,
+  //                   respoderAddress: this.state.respoAdd,
+  //                 });
+  //               }}
+                ></Button>
+              </TouchableOpacity>
+            </Text>
+          </View>
+      );
     }
   };
-
+  //onload
   componentDidMount() {
     //Get User Email From Local Storage
     AsyncStorage.getItem("userEmail").then((data) => {
@@ -113,6 +218,7 @@ export default class ProfileScreen extends React.Component {
       }
     });
   }
+  //profile data
   _renderItem = ({ item, index }) => {
     this.state.respoUID = item.id + ""
     this.state.firstName = item.first_name + "";
@@ -312,15 +418,13 @@ export default class ProfileScreen extends React.Component {
       //<SafeAreaView>
         <View style={styles.container}>
           <View>
-            {/*profile data*/}
-            <FlatList
-              data={dataSource}
-              renderItem={this._renderItem}
-              keyExtractor={(item, index) => index.toString()}
-            ></FlatList>
-          </View>
-          <View>
-            {/*updates oncall status*/}
+            <View style={styles.statusCheck}>
+              <TouchableWithoutFeedback>
+                <TextInput style={styles.textStatus} editable={false}>
+                  Assigned Report:
+                </TextInput>
+              </TouchableWithoutFeedback>
+            </View>
             <View>
               <FlatList
                 horizontal
@@ -369,6 +473,13 @@ const styles = StyleSheet.create({
     textAlign: "center",
     justifyContent: "center",
     width: Dimensions.get("screen").width * 0.436,
+  },
+  buttonComplete: {
+    textAlign: "center",
+    justifyContent: "center",
+    width: Dimensions.get("screen").width * 0.87,
+    paddingTop: 10,
+    paddingRight: 10,
   },
   buttonMap: {
     textAlign: "center",
