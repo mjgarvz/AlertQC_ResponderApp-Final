@@ -122,9 +122,10 @@ export default class IncidentScreen extends React.Component {
                 {
                   text: "Respond",
                   onPress: () => {
-                    console.log(Email);
+                    //send notification
+                    
+                    //assign report to self
                     const repID = item.id + "";
-                    console.log(repID);
                     fetch(
                       "https://alert-qc.com/mobile/updateStatusAssign.php",
                       {

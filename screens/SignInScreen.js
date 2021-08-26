@@ -42,7 +42,7 @@ class SignInScreen extends Component {
     //var uPass = Base64.encode(this.state.userPassword);
     console.log(userPassword);
 
-    fetch("https://alert-qc.com/mobile/Respo_Log.php", {
+    fetch("https://alert-qc.com/mobile/RespoLog.php", {
       method: "POST",
       headers: {
         Accept: "application/json",

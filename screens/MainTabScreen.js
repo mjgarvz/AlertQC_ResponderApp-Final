@@ -8,6 +8,8 @@ import ChatScreen from "./ChatScreen";
 import IncidentScreen from "./IncidentScreen";
 import ProfileScreen from "./Profile";
 import EditProfileScreen from "./EditProfileScreen";
+import ActiveIncidentScreen from "./ActiveIncidentScreen";
+import CompleteReportScreen from "./CompleteReportScreen";
 
 //landing
 import CreateChatScreen from "./CreateChatScreen";
@@ -17,6 +19,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 const IncidentStack = createStackNavigator();
 const ProfileStack = createStackNavigator();
 const ChatStack = createStackNavigator();
+const ActiveStack = createStackNavigator();
 
 const Tab = createBottomTabNavigator();
 
@@ -39,6 +42,16 @@ const MainTabScreen = () => (
         tabBarLabel: "Incident",
         tabBarIcon: () => (
           <SimpleLineIcons name="list" size={24} color="black" />
+        ),
+      }}
+    />
+    <Tab.Screen
+      name="Active"
+      component={ActiveStackScreen}
+      options={{
+        tabBarLabel: "Active Report",
+        tabBarIcon: () => (
+          <SimpleLineIcons name="exclamation" size={24} color="black" />
         ),
       }}
     />
@@ -102,6 +115,85 @@ const IncidentStackScreen = ({ navigation }) => (
       }}
     />
   </IncidentStack.Navigator>
+);
+
+const ActiveStackScreen = ({ navigation }) => (
+  <ActiveStack.Navigator
+    screenOptions={{
+      headerStyle: {
+        backgroundColor: "#FF8000",
+      },
+      headerTintColor: "#fff",
+      headerTitleStyle: {
+        fontWeight: "bold",
+      },
+    }}
+  >
+    <ActiveStack.Screen
+      name="ActiveIncident"
+      component={ActiveIncidentScreen}
+      options={{
+        title: "Active Report Screen",
+        headerTitleAlign: "center",
+        headerLeft: () => (
+          <CallButton
+            onPress={() => {
+              Alert.alert("Log Out?", "Are you sure you want to Log Out?", [
+                { text: "Cancel", style: "cancel" },
+                {
+                  text: "Log Out",
+                  onPress: () => {
+                    {
+                      AsyncStorage.clear();
+                      navigation.popToTop();
+                    }
+                  },
+                },
+              ]);
+            }}
+          >
+            <SimpleLineIcons
+              name="logout"
+              size={24}
+              color="black"
+            ></SimpleLineIcons>
+          </CallButton>
+        ),
+      }}
+    />
+    <ActiveStack.Screen
+      name="Complete Report"
+      component={CompleteReportScreen}
+      options={{
+        title: "Complete Report",
+        headerTitleAlign: "center",
+        headerLeft: () => (
+          <CallButton
+            onPress={() => {
+              Alert.alert("Log Out?", "Are you sure you want to Log Out?", [
+                { text: "Cancel", style: "cancel" },
+                {
+                  text: "Log Out",
+                  onPress: () => {
+                    {
+                      AsyncStorage.clear();
+                      navigation.popToTop();
+                    }
+                  },
+                },
+              ]);
+            }}
+          >
+            <SimpleLineIcons
+              name="logout"
+              size={24}
+              color="black"
+            ></SimpleLineIcons>
+          </CallButton>
+        ),
+      }}
+    />
+  </ActiveStack.Navigator>
 );
 
 const ProfileStackScreen = ({ navigation }) => (
